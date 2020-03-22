@@ -1,7 +1,9 @@
 <template>
     <div>
         <div v-bind:key="player.id" v-for="player in players">
-            <PlayerCards v-bind:player="player" />
+            <PlayerCards :player=player
+                         :current_player_id=current_player_id
+                         v-on:next-turn="$emit('next-turn')" />
         </div>
     </div>
 </template>
@@ -10,7 +12,7 @@
 import PlayerCards from './PlayerCards'
 export default {
     name: "Board",
-    props: ["players"],
+    props: ["players", "current_player_id"],
     components: {
         PlayerCards
     }

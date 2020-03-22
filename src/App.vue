@@ -1,9 +1,15 @@
 <template>
   <div id="app">
     <Header />
-    <Turn v-bind:players="players" />
-    <Board v-bind:players="players" />
-    <PlayerStatus v-bind:players="players" />
+    <Turn :players=players
+          :current_player_id=current_player_id
+          :round_number=round_number
+          :num_rounds=num_rounds />
+    <Board :players=players
+           :current_player_id=current_player_id
+           v-on:next-turn="nextTurn" />
+    <PlayerStatus :players=players
+                  :my_player_id=my_player_id />
   </div>
 </template>
 
@@ -31,22 +37,27 @@ export default {
             {
               id: 0,
               type: 0,
+              visible: false
             },
             {
               id: 1,
               type: 0,
+              visible: false
             },
             {
               id: 2,
               type: 0,
+              visible: false
             },
             {
               id: 13,
               type: 1,
+              visible: false
             },
             {
               id: 14,
               type: 0,
+              visible: false
             }
           ]
         },
@@ -58,22 +69,27 @@ export default {
             {
               id: 3,
               type: 0,
+              visible: false
             },
             {
               id: 4,
               type: 0,
+              visible: false
             },
             {
               id: 5,
               type: 0,
+              visible: false
             },
             {
               id: 15,
               type: 0,
+              visible: false
             },
             {
               id: 16,
               type: 0,
+              visible: false
             }
           ]
         },
@@ -85,22 +101,27 @@ export default {
             {
               id: 6,
               type: 0,
+              visible: false
             },
             {
               id: 7,
               type: 0,
+              visible: false
             },
             {
               id: 8,
               type: 2,
+              visible: false
             },
             {
               id: 17,
               type: 0,
+              visible: false
             },
             {
               id: 18,
               type: 1,
+              visible: false
             }
           ]
         },
@@ -112,26 +133,47 @@ export default {
             {
               id: 9,
               type: 1,
+              visible: false
             },
             {
               id: 10,
               type: 0,
+              visible: false
             },
             {
               id: 11,
               type: 1,
+              visible: false
             },
             {
               id: 12,
               type: 0,
+              visible: false
             },
             {
               id: 19,
               type: 0,
+              visible: false
             }
           ]
         }
-      ]
+      ],
+      my_player_id: 2,
+      current_player_id: 0,
+      round_number: 1,
+      num_rounds: 5
+    }
+  },
+  methods: {
+    nextTurn() {
+      var num_players = 4;
+      if(this.current_player_id == num_players - 1) {
+        this.current_player_id = 0;
+        this.round_number++;
+      }
+      else {
+        this.current_player_id++;
+      }
     }
   }
 }

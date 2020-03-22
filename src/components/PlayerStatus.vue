@@ -1,17 +1,17 @@
 <template>
     <div class="player-status">
-        <p>{{players[0].name}}</p>
-        <p>{{players[0].team}}</p>
-        <p class="player-status-card">Neutral: {{numCardsOfType(players[0], 0)}}</p>
-        <p class="player-status-card">Defuse: {{numCardsOfType(players[0], 1)}}</p>
-        <p class="player-status-card">Bomb: {{numCardsOfType(players[0], 2)}}</p>
+        <p>{{players[my_player_id].name}}</p>
+        <p>{{players[my_player_id].team}}</p>
+        <p class="player-status-card">Neutral: {{numCardsOfType(players[my_player_id], 0)}}</p>
+        <p class="player-status-card">Defuse: {{numCardsOfType(players[my_player_id], 1)}}</p>
+        <p class="player-status-card">Bomb: {{numCardsOfType(players[my_player_id], 2)}}</p>
     </div>
 </template>
 
 <script>
 export default {
     name: "PlayerStatus",
-    props: ["players"],
+    props: ["players", "my_player_id"],
     methods: {
         numCardsOfType(player, type) {
             var num = 0;
