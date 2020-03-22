@@ -1,12 +1,13 @@
 <template>
     <div class="turn">
-        Anne's turn!
+        {{players[2].name}}'s turn!
     </div>
 </template>
 
 <script>
 export default {
-    name: "Turn"
+    name: "Turn",
+    props: ["players"]
 }
 </script>
 

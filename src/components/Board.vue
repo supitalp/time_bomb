@@ -1,9 +1,8 @@
 <template>
     <div>
-        <PlayerCards />
-        <PlayerCards />
-        <PlayerCards />
-        <PlayerCards />
+        <div v-bind:key="player.id" v-for="player in players">
+            <PlayerCards v-bind:player="player" />
+        </div>
     </div>
 </template>
 
@@ -11,6 +10,7 @@
 import PlayerCards from './PlayerCards'
 export default {
     name: "Board",
+    props: ["players"],
     components: {
         PlayerCards
     }
