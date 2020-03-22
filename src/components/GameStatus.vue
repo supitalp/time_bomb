@@ -1,7 +1,7 @@
 <template>
     <div class="turn">
-        {{players[current_player_id].name}}'s turn!
-        Round number: {{round_number}} / {{num_rounds}}
+        <!-- <p>{{players[current_player_id].name}}'s turn!</p> -->
+        <p>Round number: {{round_number}} / {{num_rounds}}</p>
     </div>
 </template>
 

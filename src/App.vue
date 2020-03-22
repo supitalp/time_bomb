@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Header />
-    <Turn :players=players
+    <GameStatus :players=players
           :current_player_id=current_player_id
           :round_number=round_number
           :num_rounds=num_rounds />
@@ -15,14 +15,14 @@
 
 <script>
 import Header from './components/layout/Header'
-import Turn from './components/Turn'
+import GameStatus from './components/GameStatus'
 import Board from './components/Board'
 import PlayerStatus from './components/PlayerStatus'
 export default {
   name: 'App',
   components: {
     Header,
-    Turn,
+    GameStatus,
     Board,
     PlayerStatus
   },
