@@ -1,9 +1,11 @@
 <template>
     <div class="cards-row">
-        <div class="card" v-bind:key="card.id" v-for="card in player.cards">
-            <img :src="getImgUrl(card.type, card.visible)"
-                 v-bind:class="{'is-playing':showCard(player, card, current_player_id)}"
-                 @click="clickOnCard(player, card, current_player_id)" />
+        <div class="card" v-for="(card_id, index) in player.cards"
+                          :key="index">
+            <!-- {{card_id}} -->
+            <img :src="getImgUrl(cards[card_id])"
+                 v-bind:class="{'is-playing':showCard(player, cards[card_id], current_player_id)}"
+                 @click="clickOnCard(player, cards[card_id], current_player_id)" />
         </div>
         <p class="player-name" v-bind:class="{'is-playing':player.id == current_player_id}">{{player.name}}</p>
     </div>
@@ -12,17 +14,17 @@
 <script>
 export default {
     name: "PlayerCards",
-    props: ["player", "current_player_id"],
+    props: ["player", "cards", "current_player_id"],
     methods: {
-        getImgUrl(type, visible) {
+        getImgUrl(card) {
             var images = require.context('../../assets/cards/', false, /\.png$/)
-            if(!visible) {
+            if(!card.visible) {
                 return images('./' + 'back.png');
             }
-            else if(type == 0) {
+            else if(card.type == 0) {
                 return images('./' + 'neutral.png');
             }
-            else if(type == 1) {
+            else if(card.type == 1) {
                 return images('./' + 'defuse.png');
             }
             else {
@@ -48,7 +50,7 @@ export default {
 
 <style scoped>
     .cards-row {
-        background: #e4d297;
+        background: #FFD271;
         padding: 15px;
         text-align: left;
     }

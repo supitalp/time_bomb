@@ -2,6 +2,7 @@
     <div>
         <div v-bind:key="player.id" v-for="player in players">
             <PlayerCards :player=player
+                         :cards=cards
                          :current_player_id=current_player_id
                          v-on:next-turn="$emit('next-turn')" />
         </div>
@@ -12,7 +13,7 @@
 import PlayerCards from './PlayerCards'
 export default {
     name: "Board",
-    props: ["players", "current_player_id"],
+    props: ["players", "cards", "current_player_id"],
     components: {
         PlayerCards
     }
