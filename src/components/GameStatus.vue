@@ -14,7 +14,7 @@ export default {
 
 <style scoped>
     .turn {
-        background: #eeeeee;
+        background: #dce2fc;
         text-align: center;
         padding: 15px;
         padding-left: 25px;

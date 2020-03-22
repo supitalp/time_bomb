@@ -28,7 +28,7 @@ export default {
 
 <style scoped>
     .player-status {
-        background: #dddddd;
+        background: #b4eec3;
     }
 
     .player-status-card {
