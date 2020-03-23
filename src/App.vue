@@ -98,30 +98,13 @@ export default {
       if(num_players < 4 || num_players > 8) {
         console.log('Error: number of players unsupported');
       }
+      console.log('Num neutral: ' + num_neutral + ', num defuse: ' + num_defuse + ', num bombs: ' + num_bombs);
 
       // Create deck with the appropriate number of cards
       this.cards = [];
-      var card_idx = 0;
-
-      // neutral cards
-      for(var i = 0; i < num_neutral; ++i) {
-        this.cards.push({id: card_idx, type: 0, visible: false});
-        card_idx++;
-      }
-
-      console.log('Num neutral: ' + num_neutral + ', num defuse: ' + num_defuse + ', num bombs: ' + num_bombs);
-
-      // defuse cards
-      for(i = 0; i < num_defuse; ++i) {
-        this.cards.push({id: card_idx, type: 1, visible: false});
-        card_idx++;
-      }
-
-      // neutral cards
-      for(i = 0; i < num_bombs; ++i) {
-        this.cards.push({id: card_idx, type: 2, visible: false});
-        card_idx++;
-      }
+      for(var i = 0; i < num_neutral; ++i) this.cards.push({id: i, type: 0, visible: false}); // neutral cards
+      for(i = 0; i < num_defuse; ++i) this.cards.push({id: i + num_neutral, type: 1, visible: false}); // defuse cards
+      for(i = 0; i < num_bombs; ++i) this.cards.push({id: i + num_neutral + num_defuse, type: 2, visible: false}); // bomb
     },
     dealCards() {
       /*
