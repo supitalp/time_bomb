@@ -144,7 +144,7 @@ export default {
       }
     },
     nextTurn() {
-      var num_players = 4;
+      var num_players = this.players.length;
       if(this.current_player_id == num_players - 1) {
         this.current_player_id = 0;
         this.round_number++;
@@ -160,6 +160,7 @@ export default {
     this.addPlayer(1, "Fuchs");
     this.addPlayer(2, "Mara");
     this.addPlayer(3, "Galileo");
+    this.addPlayer(4, "Albert Choco");
     this.assignTeams();
     this.createDeck(this.num_players);
     this.dealCards();
