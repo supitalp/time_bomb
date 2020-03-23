@@ -9,10 +9,12 @@
 </template>
 
 <script>
+import io from "socket.io-client"
 export default {
   name: "JoinGame",
   data() {
     return {
+      socket: {},
       username: ''
     }
   },
@@ -24,6 +26,14 @@ export default {
       this.$router.push('/lobby');
       this.username = ''
     }
+  },
+  created: function() {
+      this.socket = io("http://localhost:3000");
+  },
+  mounted: function() {
+      this.socket.on("new-user", data => {
+          console.log(data);
+      });
   }
 }
 </script>
@@ -38,6 +48,7 @@ export default {
         padding: 10px;
         border: 0px;
         border-bottom: 1px solid #ff5454;
+        text-align: center;
     }
 
     input[type="submit"] {
