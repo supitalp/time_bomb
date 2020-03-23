@@ -2,7 +2,6 @@
     <div class="cards-row">
         <div class="card" v-for="(card_id, index) in player.cards"
                           :key="index">
-            <!-- {{card_id}} -->
             <img :src="getImgUrl(cards[card_id])"
                  v-bind:class="{'is-playing':showCard(player, cards[card_id], current_player_id)}"
                  @click="clickOnCard(player, cards[card_id], current_player_id)" />
