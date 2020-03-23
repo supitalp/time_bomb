@@ -183,27 +183,43 @@ export default {
       my_player_id: 2,
       current_player_id: 0,
       round_number: 1,
-      num_rounds: 5
+      num_rounds: 4,
+      num_cards_per_player: 5,
     }
   },
   methods: {
     dealCards() {
-      // make an array with card indices: [0, 1, 2, 3, ..., 20]
-      var all_cards = []
-      for(var i = 0; i < 20; ++i) {
-        all_cards[i] = i;
-      }
-      // shuffle array: [7, 6, 1, ..., 13]
-      all_cards = shuffle(all_cards);
-      console.log(all_cards);
+      /*
+       * Deal cards to players:
+       * Take all cards that are not yet visible,
+       * shuffle them,
+       * and distribute them to players in such a way
+       * that each player has a total of 5 cards.
+      */
 
-      // deal cards to players
-      var num_cards_per_player = 5;
+      // Build a deck with the indices of all non-visible cards [0, 1, 2, 3, ..., 20]
+      var deck = []
+      for(var i = 0; i < this.cards.length; ++i) {
+        if(!this.cards[i].visible) {
+          deck.push(i);
+        }
+      }
+
+      // Remove non-visible cards from players' hands
+      for(var player_idx = 0; player_idx < this.players.length; ++player_idx) {
+        var new_hand = this.players[player_idx].cards.filter(function(card_idx) { return this.cards[card_idx].visible; }, this);
+        this.players[player_idx].cards = new_hand;
+      }
+
+      // Shuffle deck: [7, 6, 1, ..., 13]
+      deck = shuffle(deck);
+
+      // Deal cards to players according to how much they need each
       var global_card_idx = 0;
-      for(var card_idx = 0; card_idx < num_cards_per_player; ++card_idx) {
-        for(var player_idx = 0; player_idx < this.players.length; player_idx++) {
-          this.players[player_idx].cards.push(all_cards[global_card_idx]);
-          console.log(all_cards[global_card_idx]);
+      for(player_idx = 0; player_idx < this.players.length; player_idx++) {
+        var num_cards_for_player = this.num_cards_per_player - this.players[player_idx].cards.length;
+        for(var card_idx = 0; card_idx < num_cards_for_player; ++card_idx) {
+          this.players[player_idx].cards.push(deck[global_card_idx]);
           global_card_idx++;
         }
       }
@@ -213,6 +229,7 @@ export default {
       if(this.current_player_id == num_players - 1) {
         this.current_player_id = 0;
         this.round_number++;
+        this.dealCards();
       }
       else {
         this.current_player_id++;
