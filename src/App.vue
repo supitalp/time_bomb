@@ -53,40 +53,41 @@ export default {
   data() {
     return {
       cards: [],
-      players: [
-        {
-          id: 0,
-          name: "Georges Rico",
-          team: "Bad guy",
-          cards: []
-        },
-        {
-          id: 1,
-          name: "Fuchs",
-          team: "Good guy",
-          cards: []
-        },
-        {
-          id: 2,
-          name: "Mara",
-          team: "Good guy",
-          cards: []
-        },
-        {
-          id: 3,
-          name: "Galileo",
-          team: "Bad guy",
-          cards: []
-        }
-      ],
-      num_cards_per_player: 5,
+      players: [],
       my_player_id: 2,
       current_player_id: 0,
       round_number: 1,
-      num_rounds: 4
+      num_rounds: 4,
+      num_cards_per_player: 5,
     }
   },
   methods: {
+    addPlayer(id, name) {
+      this.players.push({id: id, name: name, team: "", cards: []});
+    },
+    assignTeams() {
+      // Create array with available roles depending on number of players
+      var num_players = this.players.length
+      var roles_arr = [];
+      if(num_players == 4 || num_players == 5) {
+        roles_arr = ["Good", "Good", "Good", "Bad", "Bad"];
+      }
+      else if(num_players == 6) {
+        roles_arr = ["Good", "Good", "Good", "Good", "Bad", "Bad"];
+      }
+      else if(num_players == 7 || num_players == 8) {
+        roles_arr = ["Good", "Good", "Good", "Good", "Good", "Bad", "Bad", "Bad"];
+      }
+
+      // Shuffle roles
+      roles_arr = shuffle(roles_arr);
+
+      // Deal one role for each player
+      for(var player_idx = 0; player_idx < num_players; ++player_idx) {
+        this.players[player_idx].team = roles_arr[player_idx];
+        console.log(this.players[player_idx].name + ': ' + this.players[player_idx].team);
+      }
+    },
     createDeck() {
       var num_players = this.players.length;
       console.log('Create deck for ' + num_players + ' players');
@@ -155,6 +156,11 @@ export default {
     }
   },
   created: function() {
+    this.addPlayer(0, "Georges Rico");
+    this.addPlayer(1, "Fuchs");
+    this.addPlayer(2, "Mara");
+    this.addPlayer(3, "Galileo");
+    this.assignTeams();
     this.createDeck(this.num_players);
     this.dealCards();
   }
