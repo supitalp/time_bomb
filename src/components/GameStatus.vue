@@ -1,5 +1,5 @@
 <template>
-    <div class="turn">
+    <div class="game-status">
         <!-- <p>{{players[current_player_id].name}}'s turn!</p> -->
         <p>Round number: {{round_number}} / {{num_rounds}}</p>
         <p>Number of defuse found: {{this.numDefuseFound()}} / {{this.players.length}}</p>
@@ -23,7 +23,7 @@ export default {
 </script>
 
 <style scoped>
-    .turn {
+    .game-status {
         background: #dce2fc;
         text-align: left;
         padding: 0px;
