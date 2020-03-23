@@ -1,6 +1,10 @@
 <template>
     <header class="header">
         <h1>Time Bomb!</h1>
+        <!-- <div id="nav">
+            <router-link to="/">Lobby</router-link> |
+            <router-link to="/game">Game</router-link>
+        </div> -->
     </header>
 </template>
 
