@@ -52,108 +52,7 @@ export default {
   },
   data() {
     return {
-      cards: [
-            {
-              id: 0,
-              type: 0,
-              visible: false
-            },
-            {
-              id: 1,
-              type: 0,
-              visible: false
-            },
-            {
-              id: 2,
-              type: 0,
-              visible: false
-            },
-            {
-              id: 3,
-              type: 0,
-              visible: false
-            },
-            {
-              id: 4,
-              type: 0,
-              visible: false
-            },
-            {
-              id: 5,
-              type: 0,
-              visible: false
-            },
-            {
-              id: 6,
-              type: 0,
-              visible: false
-            },
-            {
-              id: 7,
-              type: 0,
-              visible: false
-            },
-            {
-              id: 8,
-              type: 0,
-              visible: false
-            },
-            {
-              id: 9,
-              type: 0,
-              visible: false
-            },
-            {
-              id: 10,
-              type: 0,
-              visible: false
-            },
-            {
-              id: 11,
-              type: 0,
-              visible: false
-            },
-            {
-              id: 12,
-              type: 0,
-              visible: false
-            },
-            {
-              id: 13,
-              type: 0,
-              visible: false
-            },
-            {
-              id: 14,
-              type: 0,
-              visible: false
-            },
-            {
-              id: 15,
-              type: 1,
-              visible: false
-            },
-            {
-              id: 16,
-              type: 1,
-              visible: false
-            },
-            {
-              id: 17,
-              type: 1,
-              visible: false
-            },
-            {
-              id: 18,
-              type: 1,
-              visible: false
-            },
-            {
-              id: 19,
-              type: 2,
-              visible: false
-            }
-      ],
+      cards: [],
       players: [
         {
           id: 0,
@@ -180,14 +79,50 @@ export default {
           cards: []
         }
       ],
+      num_cards_per_player: 5,
       my_player_id: 2,
       current_player_id: 0,
       round_number: 1,
-      num_rounds: 4,
-      num_cards_per_player: 5,
+      num_rounds: 4
     }
   },
   methods: {
+    createDeck() {
+      var num_players = this.players.length;
+      console.log('Create deck for ' + num_players + ' players');
+
+      // Find out how many cards of each type are required
+      var num_bombs = 1;
+      var num_defuse = num_players;
+      var num_neutral = (num_players * this.num_cards_per_player - num_bombs - num_defuse);
+      if(num_players < 4 || num_players > 8) {
+        console.log('Error: number of players unsupported');
+      }
+
+      // Create deck with the appropriate number of cards
+      this.cards = [];
+      var card_idx = 0;
+
+      // neutral cards
+      for(var i = 0; i < num_neutral; ++i) {
+        this.cards.push({id: card_idx, type: 0, visible: false});
+        card_idx++;
+      }
+
+      console.log('Num neutral: ' + num_neutral + ', num defuse: ' + num_defuse + ', num bombs: ' + num_bombs);
+
+      // defuse cards
+      for(i = 0; i < num_defuse; ++i) {
+        this.cards.push({id: card_idx, type: 1, visible: false});
+        card_idx++;
+      }
+
+      // neutral cards
+      for(i = 0; i < num_bombs; ++i) {
+        this.cards.push({id: card_idx, type: 2, visible: false});
+        card_idx++;
+      }
+    },
     dealCards() {
       /*
        * Deal cards to players:
@@ -237,6 +172,7 @@ export default {
     }
   },
   created: function() {
+    this.createDeck(this.num_players);
     this.dealCards();
   }
 }
