@@ -1,6 +1,6 @@
 <template>
     <div class="game-status">
-        <!-- <p>{{players[current_player_id].name}}'s turn!</p> -->
+        <p>{{current_player_name}}'s turn!</p>
         <p>Round number: {{this.$store.getters.round_number}} / {{this.$store.getters.num_rounds}}</p>
         <p>Number of defuse found: {{this.numDefuseFound()}} / {{this.$store.getters.players.length}}</p>
     </div>
@@ -17,6 +17,11 @@ export default {
                 if(cards[i].type == 1 && cards[i].visible) num_defuse_found++;
             }
             return num_defuse_found;
+        }
+    },
+    computed: {
+        current_player_name: function() {
+            return this.$store.getters.players[this.$store.getters.current_player_id].name;
         }
     }
 }

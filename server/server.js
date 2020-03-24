@@ -142,9 +142,6 @@ function prepareNewGame() {
 	createPlayers();
 	createDeck();
 	dealCards();
-
-	console.log(cards);
-	console.log(players);
 }
 
 function updateGameState() {

@@ -37,10 +37,10 @@ export default {
                 return;
             }
             if(player.id == current_player_id) {
-                return; // prevent current user to select one of his own cards
+                return; // prevent current user from selecting one of his own cards
             }
             if(card.visible) {
-                return; // prevent selecting an already discovered card
+                return; // prevent user from selecting an already discovered card
             }
             card.visible = true;
             this.$socket.emit("SELECT_CARD", {player: player, card: card});
