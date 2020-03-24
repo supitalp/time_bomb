@@ -1,20 +1,19 @@
 <template>
     <div class="player-status">
-        <p>{{players[my_player_id].name}}</p>
-        <p>{{players[my_player_id].team}}</p>
+        <p>{{my_player.name}}</p>
+        <p>{{my_player.team}}</p>
         <p class="player-status-card">Neutral:
-            {{numCardsOfType(players[my_player_id], cards, 0)}}</p>
+            {{numCardsOfType(my_player, cards, 0)}}</p>
         <p class="player-status-card">Defuse:
-            {{numCardsOfType(players[my_player_id], cards, 1)}}</p>
+            {{numCardsOfType(my_player, cards, 1)}}</p>
         <p class="player-status-card">Bomb:
-            {{numCardsOfType(players[my_player_id], cards, 2)}}</p>
+            {{numCardsOfType(my_player, cards, 2)}}</p>
     </div>
 </template>
 
 <script>
 export default {
     name: "PlayerStatus",
-    props: ["players", "cards", "my_player_id"],
     methods: {
         numCardsOfType(player, cards, type) {
             var num = 0;
@@ -24,6 +23,20 @@ export default {
                 }
             }
             return num;
+        }
+    },
+    computed: {
+        my_username: function() {
+            return this.$store.getters.my_username;
+        },
+        my_player: function() {
+            return this.$store.getters.players.find(o => o.name === this.$store.getters.my_username);
+        },
+        players: function() {
+            return this.$store.getters.players;
+        },
+        cards: function() {
+            return this.$store.getters.cards;
         }
     }
 }

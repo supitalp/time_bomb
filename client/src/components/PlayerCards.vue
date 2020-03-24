@@ -13,7 +13,7 @@
 <script>
 export default {
     name: "PlayerCards",
-    props: ["player", "cards", "current_player_id"],
+    props: ["player"],
     methods: {
         getImgUrl(card) {
             var images = require.context('../../assets/cards/', false, /\.png$/)
@@ -38,10 +38,22 @@ export default {
                 return; // prevent selecting an already discovered card
             }
             card.visible = true;
-            this.$emit('next-turn');
+            this.$socket.emit("SELECT_CARD", {player: player, card: card});
+            // this.$emit('next-turn');
         },
         showCard(player, card, current_player_id) {
             return (!card.visible && player.id == current_player_id);
+        }
+    },
+    computed: {
+        current_player_id: function() {
+            return this.$store.getters.current_player_id;
+        },
+        players: function() {
+            return this.$store.getters.players;
+        },
+        cards: function() {
+            return this.$store.getters.cards;
         }
     }
 }
