@@ -2,13 +2,46 @@
   <div class="lobby">
     <h1>Lobby</h1>
     <h3>Players</h3>
-    <p>Georges Rico</p>
-    <p>Mara</p>
+    <p v-for="user in this.$store.getters.connected_users" :key="user.id">
+        {{user.username}}
+    </p>
+    <form @submit="startGame">
+    <input type="submit" value="Start Game" class="btn" :disabled="!Boolean(canStartGame())">
+    </form>
   </div>
 </template>
 
 <script>
 export default {
-  name: "Lobby"
+  name: "Lobby",
+  sockets: {
+    START_GAME: function() {
+      this.$router.push('/game');
+    }
+  },
+  methods: {
+    startGame() {
+      this.$socket.emit("START_GAME");
+    },
+    canStartGame() {
+      var num_players = this.$store.getters.connected_users.length;
+      // return num_players >= 4 && num_players <= 8;
+      return num_players >= 1; // TODO: change that to line above!!!!
+    }
+  }
 }
 </script>
+
+<style scoped>
+    input[type="submit"] {
+        padding: 7px;
+        margin: 15px;
+        border: 0px;
+        background: #ff5454;
+        color: #ffffff;
+    }
+
+    input[type="submit"]:disabled {
+      background: #aaaaaa;
+    }
+</style>

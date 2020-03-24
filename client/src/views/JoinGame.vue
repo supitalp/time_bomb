@@ -1,39 +1,30 @@
 <template>
   <div class="join-game">
-    <form @submit="joinGame">
+    <form @submit.prevent="joinGame">
     <input type="text" v-model="username" name="username" placeholder="My username">
     <br />
-    <input type="submit" value="Join Game" class="btn">
+    <input type="submit" value="Join Game" class="btn" :disabled="!Boolean(username)">
     </form>
   </div>
 </template>
 
 <script>
-import io from "socket.io-client"
+
 export default {
   name: "JoinGame",
   data() {
     return {
-      socket: {},
       username: ''
     }
   },
+  sockets: {
+  },
   methods: {
-    joinGame(e) {
-      e.preventDefault();
+    joinGame() {
       console.log(this.username + ' joined game!');
-      // here, should notify server that I joined the game
+      this.$socket.emit("USER_JOIN_ROOM", this.username);
       this.$router.push('/lobby');
-      this.username = ''
     }
-  },
-  created: function() {
-      this.socket = io("http://localhost:3000");
-  },
-  mounted: function() {
-      this.socket.on("new-user", data => {
-          console.log(data);
-      });
   }
 }
 </script>
@@ -57,5 +48,9 @@ export default {
         border: 0px;
         background: #ff5454;
         color: #ffffff;
+    }
+
+    input[type="submit"]:disabled {
+        background: #aaaaaa;
     }
 </style>

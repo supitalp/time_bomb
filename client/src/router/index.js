@@ -9,7 +9,7 @@ const routes = [
   {
     path: '/',
     name: 'JoinGame',
-    component: JoinGame
+    component: JoinGame,
   },
   {
     path: '/lobby',
