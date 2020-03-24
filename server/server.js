@@ -127,14 +127,14 @@ function dealCards() {
 	}
 }
 
+// do the book keeping to make the next turn happen
+// also check if the game is finished or not
+// return the game status: "running", "end_round", "end_game"
 function nextTurn() {
 	var num_players = players.length;
 	num_turns_in_current_round++;
 	if(num_turns_in_current_round >= num_players) {  // one round finished
 		num_turns_in_current_round = 0;
-
-		// notify users that the round is finished (so that they may display a dialog or else)
-		Socketio.emit("END_OF_ROUND");
 
 		// prepare next round: it should start from the player next to
 		// the player that started the previous round
@@ -143,11 +143,18 @@ function nextTurn() {
 		current_player_id = player_id_started_current_round;
 		round_number++;
 
+		if(round_number > num_rounds) {
+			return "end_game";
+		}
+
 		// re-deal cards to all players
 		dealCards();
+
+		return "end_round";
 	}
 	else {
 		current_player_id = (current_player_id + 1) % num_players;
+		return "running";
 	}
 }
 
@@ -164,6 +171,20 @@ function updateGameState() {
 		current_player_id: current_player_id,
 		round_number: round_number,
 		num_rounds: num_rounds});
+}
+
+function numDefuseFound() {
+	var num_defuse_found = 0;
+	for(var i = 0; i < cards.length; ++i) {
+		if(cards[i].type == 1 && cards[i].visible) num_defuse_found++;
+	}
+	return num_defuse_found;
+}
+
+function endGame() {
+	updateGameState();
+	Socketio.emit("END_GAME");
+	// now reset game...
 }
 
 Socketio.on("connection", socket => {
@@ -199,9 +220,26 @@ Socketio.on("connection", socket => {
 		u_card = cards.find(o => o.id === message.card.id);
 		u_card.visible = true;
 
-		// next turn: go to next player
-		nextTurn();
+		if(u_card.type == 2) {
+			endGame("bomb");
+		}
+		if(numDefuseFound() == players.length) {
+			endGame("defuse_found");
+		}
 
-		updateGameState();
+		// next turn: go to next player
+		let game_status = nextTurn();
+		if(game_status == "end_round") {
+			// notify users that the round is finished (so that they may display a dialog or else)
+			Socketio.emit("END_ROUND");
+			// leave time for dialog box to be opened
+			setTimeout(() => updateGameState(), 3000 + 100);
+		}
+		else if(game_status == "end_game") {
+			endGame("rounds_expired");
+		}
+		else {
+			updateGameState();
+		}
 	});
 });

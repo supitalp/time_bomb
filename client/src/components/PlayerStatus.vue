@@ -18,7 +18,8 @@ export default {
         numCardsOfType(player, cards, type) {
             var num = 0;
             for(var index = 0; index < player.cards.length; ++index) {
-                if(cards[player.cards[index]].type == type) {
+                if(cards[player.cards[index]].type == type
+                && !cards[player.cards[index]].visible) {
                     num++;
                 }
             }

@@ -2,12 +2,12 @@
   <div class="lobby">
     <h1>Lobby</h1>
     <h3>Players</h3>
-    <p v-for="user in this.$store.getters.connected_users" :key="user.id">
-        {{user.username}}
-    </p>
     <form @submit="startGame">
     <input type="submit" value="Start Game" class="btn" :disabled="!Boolean(canStartGame())">
     </form>
+    <p v-for="user in this.$store.getters.connected_users" :key="user.id">
+        {{user.username}}
+    </p>
   </div>
 </template>
 

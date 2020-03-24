@@ -5,7 +5,7 @@ import store from './store'
 import socketio from 'socket.io-client';
 import VueSocketIO from 'vue-socket.io';
 
-const SocketInstance = socketio.connect('http://localhost:3000');
+const SocketInstance = socketio.connect('http://192.168.0.80:3000');
 
 Vue.use(new VueSocketIO({
     debug: true,
