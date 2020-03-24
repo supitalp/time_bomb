@@ -31,6 +31,11 @@ export default {
             }
         },
         clickOnCard(player, card, current_player_id) {
+            // prevent current user from doing anything if it is not is turn
+            if(this.$store.getters.my_username !== this.$store.getters.players[current_player_id].name) {
+                console.log('Cannot uncover card while it is not your turn!');
+                return;
+            }
             if(player.id == current_player_id) {
                 return; // prevent current user to select one of his own cards
             }
@@ -39,13 +44,15 @@ export default {
             }
             card.visible = true;
             this.$socket.emit("SELECT_CARD", {player: player, card: card});
-            // this.$emit('next-turn');
         },
         showCard(player, card, current_player_id) {
             return (!card.visible && player.id == current_player_id);
         }
     },
     computed: {
+        my_username: function() {
+            return this.$store.getters.my_username;
+        },
         current_player_id: function() {
             return this.$store.getters.current_player_id;
         },
