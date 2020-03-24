@@ -5,8 +5,9 @@ const Socketio = require("socket.io")(Http);
 var connected_users = [];
 var cards = [];
 var players = [];
-var my_player_id = 0;
 var current_player_id = 0;
+var num_turns_in_current_round = 0;
+var player_id_started_current_round = 0;
 var round_number = 1;
 var num_rounds = 4;
 const num_cards_per_player = 5;
@@ -128,13 +129,25 @@ function dealCards() {
 
 function nextTurn() {
 	var num_players = players.length;
-	if (current_player_id == num_players - 1) {
-		current_player_id = 0;
+	num_turns_in_current_round++;
+	if(num_turns_in_current_round >= num_players) {  // one round finished
+		num_turns_in_current_round = 0;
+
+		// notify users that the round is finished (so that they may display a dialog or else)
+		Socketio.emit("END_OF_ROUND");
+
+		// prepare next round: it should start from the player next to
+		// the player that started the previous round
+		num_turns_in_current_round = 0;
+		player_id_started_current_round = (player_id_started_current_round + 1) % num_players;
+		current_player_id = player_id_started_current_round;
 		round_number++;
+
+		// re-deal cards to all players
 		dealCards();
 	}
 	else {
-		current_player_id++;
+		current_player_id = (current_player_id + 1) % num_players;
 	}
 }
 
