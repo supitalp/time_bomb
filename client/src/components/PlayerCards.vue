@@ -66,7 +66,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
     .cards-row {
         background: #ffffff;
         padding: 0.5%;
@@ -75,14 +75,17 @@ export default {
 
     .card {
         display: inline;
+        padding-left: 1.5%;
+        padding-right: 1.5%;
     }
 
     img {
+        padding: 1.25px;
         width: 15%;
         max-width: 100px;
-        padding-left: 1.5%;
-        padding-right: 1.5%;
         /* border: 1px black solid; */
+        box-shadow: 2px 2px grey;
+        border-radius: 6%;
     }
 
     .player-name {

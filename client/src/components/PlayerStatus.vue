@@ -2,14 +2,20 @@
     <div class="player-status">
         <div class="player-identity">
             <p>{{my_player.name}}</p>
-            <img class="card_preview" :src="getTeamImgUrl(my_player.team)" />
+            <img class="card-preview" :src="getTeamImgUrl(my_player.team)" />
         </div>
         <div class="player-cards-row">
             <p>My hidden cards</p>
-            <div class="player-cards">
-                <img v-for="index in numCardsOfType(my_player, cards, 0)" :key="index" class="card_preview" :src="getImgUrl(0)" />
-                <img v-for="index in numCardsOfType(my_player, cards, 1)" :key="index" class="card_preview" :src="getImgUrl(1)" />
-                <img v-for="index in numCardsOfType(my_player, cards, 2)" :key="index" class="card_preview" :src="getImgUrl(2)" />
+            <div class="my-cards">
+                <div class="card" v-for="index in numCardsOfType(my_player, cards, 0)" :key="index" :src="getImgUrl(0)" >
+                    <img class="card-preview" :src="getImgUrl(0)" />
+                </div>
+                <div class="card" v-for="index in numCardsOfType(my_player, cards, 1)" :key="index" :src="getImgUrl(1)" >
+                    <img class="card-preview" :src="getImgUrl(1)" />
+                </div>
+                <div class="card" v-for="index in numCardsOfType(my_player, cards, 2)" :key="index" :src="getImgUrl(2)" >
+                    <img class="card-preview" :src="getImgUrl(2)" />
+                </div>
             </div>
         </div>
     </div>
@@ -81,17 +87,26 @@ export default {
 
     .player-identity {
         flex: 1;
+        border-right: 1px grey solid;
     }
 
     .player-cards-row {
-        flex: 3;
+        flex: 4;
     }
 
-    img.card_preview {
+    .my-cards {
+        display: flex;
+        justify-content: center;
+    }
+
+    .card {
+        padding-left: 1%;
+        padding-right: 1%;
+    }
+
+    img.card-preview {
         width: 90%;
         max-width: 100px;
-        padding-left: 0.5%;
-        padding-right: 0.5%;
     }
 
     p {

@@ -23,6 +23,7 @@ export default {
 
 <style scoped>
     div {
-        color: #000;
+        padding-top: 7px;
+        padding-bottom: 7px;
     }
 </style>
