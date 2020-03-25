@@ -1,6 +1,6 @@
 <template>
     <div class="game-status">
-        <p>{{current_player_name}}'s turn!</p>
+        <!-- <p>{{current_player_name}}'s turn!</p> -->
         <p>Round number: {{this.$store.getters.round_number}} / {{this.$store.getters.num_rounds}}</p>
         <p>Number of defuse found: {{this.numDefuseFound()}} / {{this.$store.getters.players.length}}</p>
     </div>

@@ -23,7 +23,7 @@ export default {
 
 <style scoped>
     div {
-        padding-top: 7px;
-        padding-bottom: 7px;
+        padding-top: 3px;
+        padding-bottom: 3px;
     }
 </style>

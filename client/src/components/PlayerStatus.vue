@@ -7,13 +7,14 @@
         <div class="player-cards-row">
             <p>My hidden cards</p>
             <div class="my-cards">
-                <div class="card" v-for="index in numCardsOfType(my_player, cards, 0)" :key="index" :src="getImgUrl(0)" >
+                <!-- https://stackoverflow.com/a/52658488 -->
+                <div class="card" v-for="i in numCardsOfType(my_player, cards, 0)" :key="'neutral' + i" :src="getImgUrl(0)" >
                     <img class="card-preview" :src="getImgUrl(0)" />
                 </div>
-                <div class="card" v-for="index in numCardsOfType(my_player, cards, 1)" :key="index" :src="getImgUrl(1)" >
+                <div class="card" v-for="i in numCardsOfType(my_player, cards, 1)" :key="'defuse' + i" :src="getImgUrl(1)" >
                     <img class="card-preview" :src="getImgUrl(1)" />
                 </div>
-                <div class="card" v-for="index in numCardsOfType(my_player, cards, 2)" :key="index" :src="getImgUrl(2)" >
+                <div class="card" v-for="i in numCardsOfType(my_player, cards, 2)" :key="'bomb' + i" :src="getImgUrl(2)" >
                     <img class="card-preview" :src="getImgUrl(2)" />
                 </div>
             </div>

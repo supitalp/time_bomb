@@ -1,12 +1,12 @@
 <template>
-    <div class="cards-row">
-        <div class="card" v-for="(card_id, index) in player.cards"
-                          :key="index">
-            <img :src="getImgUrl(cards[card_id])"
-                 v-bind:class="{'is-playing':showCard(player, cards[card_id], current_player_id)}"
-                 @click="clickOnCard(player, cards[card_id], current_player_id)" />
-        </div>
+    <div class="cards-container">
         <p class="player-name" v-bind:class="{'is-playing':player.id == current_player_id}">{{player.name}}</p>
+        <div class="cards-in-row">
+            <img v-for="(card_id, index) in player.cards" :key="index"
+                :src="getImgUrl(cards[card_id])"
+                v-bind:class="{'is-playing':showCard(player, cards[card_id], current_player_id)}"
+                @click="clickOnCard(player, cards[card_id], current_player_id)" />
+        </div>
     </div>
 </template>
 
@@ -67,29 +67,40 @@ export default {
 </script>
 
 <style>
-    .cards-row {
+    .cards-container {
+        margin: auto;
+        width: 85%;
+        display: flex;
         background: #ffffff;
-        padding: 0.5%;
+        align-items: center;
+        /* border: 1px black solid; */
+    }
+
+    .player-name {
+        flex: 1;
+        /* border: 1px black solid; */
+    }
+
+    .cards-in-row {
+        flex: 10;
+        display: flex;
+        justify-content: space-evenly;
         /* border: 1px black solid; */
     }
 
     .card {
         display: inline;
-        padding-left: 1.5%;
-        padding-right: 1.5%;
+        padding-left: 1%;
+        padding-right: 1%;
     }
 
     img {
         padding: 1.25px;
         width: 15%;
-        max-width: 100px;
+        max-width: 90px;
         /* border: 1px black solid; */
         box-shadow: 2px 2px grey;
         border-radius: 6%;
-    }
-
-    .player-name {
-        display: inline;
     }
 
     .is-playing {

@@ -19,7 +19,7 @@
           id="modalDescription"
         >
           <slot name="body">
-            Round finished! The cards are being redistributed...
+            Round finished! The cards have been redistributed.
           </slot>
         </section>
       </div>

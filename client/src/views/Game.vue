@@ -7,6 +7,11 @@
                   :reason="reason"
                   @close="closeEndGameModal" />
 
+    <div class="turn-notification"
+         v-bind:class="{'my-turn':this.$store.getters.my_username == current_player_name}">
+      {{current_player_name}}'s turn!
+    </div>
+
     <GameStatus />
     <Board />
     <PlayerStatus />
@@ -64,8 +69,16 @@ export default {
       // and go back to the main page...
       this.$router.push('/');
       this.$socket.emit("RESET_GAME");
+    },
+    myTurn() {
+      return this.$store.getters.players[this.$store.getters.current_player_id].name === this.$store.getters.my_username;
     }
   },
+  computed: {
+      current_player_name: function() {
+          return this.$store.getters.players[this.$store.getters.current_player_id].name;
+      }
+  }
 }
 </script>
 
@@ -77,4 +90,15 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
+
+.turn-notification {
+  background: orange;
+  padding: 6px;
+  font-weight: bold;
+}
+
+.my-turn {
+  background: lightgreen;
+}
+
 </style>
