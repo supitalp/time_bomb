@@ -1,13 +1,17 @@
 <template>
     <div class="player-status">
-        <p>{{my_player.name}}</p>
-        <p>{{my_player.team}}</p>
-        <p class="player-status-card">Neutral:
-            {{numCardsOfType(my_player, cards, 0)}}</p>
-        <p class="player-status-card">Defuse:
-            {{numCardsOfType(my_player, cards, 1)}}</p>
-        <p class="player-status-card">Bomb:
-            {{numCardsOfType(my_player, cards, 2)}}</p>
+        <div class="player-identity">
+            <p>{{my_player.name}}</p>
+            <img class="card_preview" :src="getTeamImgUrl(my_player.team)" />
+        </div>
+        <div class="player-cards-row">
+            <p>My hidden cards</p>
+            <div class="player-cards">
+                <img v-for="index in numCardsOfType(my_player, cards, 0)" :key="index" class="card_preview" :src="getImgUrl(0)" />
+                <img v-for="index in numCardsOfType(my_player, cards, 1)" :key="index" class="card_preview" :src="getImgUrl(1)" />
+                <img v-for="index in numCardsOfType(my_player, cards, 2)" :key="index" class="card_preview" :src="getImgUrl(2)" />
+            </div>
+        </div>
     </div>
 </template>
 
@@ -24,7 +28,28 @@ export default {
                 }
             }
             return num;
-        }
+        },
+        getTeamImgUrl(team) {
+            var images = require.context('../../assets/cards/original');
+            if(team === "Good") {
+                return images('./' + 'good_guy_1.png');
+            }
+            else {
+                return images('./' + 'bad_guy_1.png');
+            }
+        },
+        getImgUrl(type) {
+            var images = require.context('../../assets/cards/original');
+            if(type == 0) {
+                return images('./' + 'neutral.png');
+            }
+            else if(type == 1) {
+                return images('./' + 'defuse.png');
+            }
+            else {
+                return images('./' + 'bomb.png');
+            }
+        },
     },
     computed: {
         my_username: function() {
@@ -45,11 +70,32 @@ export default {
 
 <style scoped>
     .player-status {
-        background: #b4eec3;
+        width: 95%;
+        margin: auto;
+        display: flex;
+        flex-direction: row;
+
+        background: #ffffff;
+        border-top: 1px grey solid;
     }
 
-    .player-status-card {
-        display: inline;
-        margin: 20px;
+    .player-identity {
+        flex: 1;
     }
+
+    .player-cards-row {
+        flex: 3;
+    }
+
+    img.card_preview {
+        width: 90%;
+        max-width: 100px;
+        padding-left: 0.5%;
+        padding-right: 0.5%;
+    }
+
+    p {
+        color: #444444;
+    }
+
 </style>

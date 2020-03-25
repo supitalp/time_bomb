@@ -16,7 +16,7 @@ export default {
     props: ["player"],
     methods: {
         getImgUrl(card) {
-            var images = require.context('../../assets/cards/', false, /\.png$/)
+            var images = require.context('../../assets/cards/original');
             if(!card.visible) {
                 return images('./' + 'back.png');
             }
@@ -68,9 +68,9 @@ export default {
 
 <style scoped>
     .cards-row {
-        background: #FFD271;
-        padding: 15px;
-        text-align: left;
+        background: #ffffff;
+        padding: 0.5%;
+        /* border: 1px black solid; */
     }
 
     .card {
@@ -78,8 +78,11 @@ export default {
     }
 
     img {
-        width: 70px;
-        padding-right: 30px;
+        width: 15%;
+        max-width: 100px;
+        padding-left: 1.5%;
+        padding-right: 1.5%;
+        /* border: 1px black solid; */
     }
 
     .player-name {

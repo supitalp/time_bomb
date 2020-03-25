@@ -29,9 +29,10 @@ export default {
 
 <style scoped>
     .game-status {
-        background: #dce2fc;
+        background: #ffffff;
         text-align: left;
         padding: 0px;
         padding-left: 25px;
+        border-bottom: 1px black solid;
     }
 </style>
