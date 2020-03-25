@@ -105,7 +105,7 @@ export default {
         padding-right: 1%;
     }
 
-    img.card-preview {
+    .card-preview {
         width: 90%;
         max-width: 100px;
     }

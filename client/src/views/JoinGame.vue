@@ -32,7 +32,7 @@ export default {
 
 <style scoped>
     .join-game {
-        padding: 100px;
+        padding-top: 100px;
     }
 
     input[type="text"] {

@@ -80,6 +80,7 @@ function createDeck() {
 
 	// Find out how many cards of each type are required
 	var num_bombs = 1;
+	// var num_bombs = 0; // WARNING
 	var num_defuse = num_players;
 	var num_neutral = (num_players * num_cards_per_player - num_bombs - num_defuse);
 	if (num_players < 4 || num_players > 8) {
@@ -101,6 +102,8 @@ function dealCards() {
 		* shuffle them,
 		* and distribute them to players in such a way
 		* that each player has a total of 5 cards.
+		* Also remember where the visible cards were so as to keep them
+		* at their original position.
 	*/
 
 	// Build a deck with the indices of all non-visible cards [0, 1, 2, 3, ..., 20]
@@ -111,9 +114,14 @@ function dealCards() {
 		}
 	}
 
+	var visible_card_locations = [];
 	// Remove non-visible cards from players' hands
 	for (var player_idx = 0; player_idx < players.length; ++player_idx) {
 		var new_hand = players[player_idx].cards.filter(function (card_idx) { return cards[card_idx].visible; });
+		// Remember, for each player, what were the positions of his visible cards if any
+		visible_card_locations.push(
+			players[player_idx].cards.reduce(function(indices_visible_cards, card_idx, i) { if(cards[card_idx].visible) indices_visible_cards.push(i); return indices_visible_cards; }, [])
+		);
 		players[player_idx].cards = new_hand;
 	}
 
@@ -128,6 +136,22 @@ function dealCards() {
 			players[player_idx].cards.push(deck[global_card_idx]);
 			global_card_idx++;
 		}
+	}
+
+	// Restore the visible cards to their original positions
+	for (player_idx = 0; player_idx < players.length; player_idx++) {
+		// console.log('Cards before reorganization: ');
+		// console.log(players[player_idx].cards);
+		// console.log('Prev card locations ' + players[player_idx].name + ': ');
+		// console.log(visible_card_locations[player_idx]);
+		for(i = 0; i < visible_card_locations[player_idx].length; ++i) {
+			let desired_location = visible_card_locations[player_idx][i];
+			// console.log('desired loc: ' + desired_location);
+			// swap cur_cards[i] and cur_cards[desired_location]
+			[players[player_idx].cards[desired_location], players[player_idx].cards[i]] = [players[player_idx].cards[i], players[player_idx].cards[desired_location]];
+		}
+		// console.log('Cards after reorganization: ');
+		// console.log(players[player_idx].cards);
 	}
 }
 

@@ -3,6 +3,7 @@
         <p class="player-name" v-bind:class="{'is-playing':player.id == current_player_id}">{{player.name}}</p>
         <div class="cards-in-row">
             <img v-for="(card_id, index) in player.cards" :key="index"
+                class="card-preview"
                 :src="getImgUrl(cards[card_id])"
                 v-bind:class="{'is-playing':showCard(player, cards[card_id], current_player_id)}"
                 @click="clickOnCard(player, cards[card_id], current_player_id)" />
@@ -82,7 +83,7 @@ export default {
     }
 
     .cards-in-row {
-        flex: 10;
+        flex: 5;
         display: flex;
         justify-content: space-evenly;
         /* border: 1px black solid; */
@@ -94,7 +95,7 @@ export default {
         padding-right: 1%;
     }
 
-    img {
+    .card-preview {
         padding: 1.25px;
         width: 15%;
         max-width: 90px;

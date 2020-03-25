@@ -25,5 +25,7 @@ export default {
     div {
         padding-top: 3px;
         padding-bottom: 3px;
+        margin-top: 2px;
+        margin-bottom: 2px;
     }
 </style>
