@@ -3,8 +3,8 @@
     <div class="modal-backdrop">
       <div class="modal"
         role="dialog"
-        aria-labelledby="modalTitle"
-        aria-describedby="modalDescription"
+        aria-labelledby="EndGame"
+        aria-describedby="End of game"
       >
         <header
           class="modal-header"
@@ -12,15 +12,6 @@
         >
           <slot name="header">
             End of game!
-
-          <button
-            type="button"
-            class="btn-close"
-            @click="closeEndGameModal"
-          >
-            x
-          </button>
-
           </slot>
         </header>
         <section
@@ -28,33 +19,49 @@
           id="modalDescription"
         >
           <slot name="body">
-            Game finished! Say why the game is finished and who has won.
+            {{getTextDescription(reason)}}
           </slot>
         </section>
-
-       <footer class="modal-footer">
+        <footer class="modal-footer">
           <slot name="footer">
+
             <button
               type="button"
               class="btn-green"
-              @click="closeEndGameModal"
+              @click="close"
+              aria-label="Close modal"
             >
-              New game
-          </button>
-        </slot>
-      </footer>
-
+              Close
+            </button>
+          </slot>
+        </footer>
       </div>
     </div>
   </transition>
 </template>
 
+
 <script>
   export default {
     name: 'EndGameModal',
+    props: ["reason"],
     methods: {
         close() {
             this.$emit('close');
+        },
+        getTextDescription(reason) {
+          if(reason === 'bomb') {
+            return "The bomb exploded! The bad guys win!";
+          }
+          else if(reason === 'defuse_found') {
+            return "The bomb has been defused! The good guys win!";
+          }
+          else if(reason === 'rounds_expired') {
+            return "Time expired! The good guys win!";
+          }
+          else {
+            return "Error: I don't know why the game ended.";
+          }
         }
     }
   };
@@ -62,6 +69,7 @@
 
 <style>
   .modal-backdrop {
+    z-index: 2;
     position: fixed;
     top: 0;
     bottom: 0;

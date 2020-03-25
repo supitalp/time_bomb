@@ -4,6 +4,7 @@
 
     <EndRoundModal v-show="isEndRoundModalVisible" />
     <EndGameModal v-show="isEndGameModalVisible"
+                  :reason="reason"
                   @close="closeEndGameModal" />
 
     <GameStatus />
@@ -35,6 +36,7 @@ export default {
       setTimeout(() => this.closeEndRoundModal(), 3000);
     },
     END_GAME: function(reason) {
+      this.reason = reason;
       console.log("Game has ended because: " + reason);
       this.showEndGameModal();
     }
@@ -42,7 +44,8 @@ export default {
   data () {
     return {
       isEndRoundModalVisible: false,
-      isEndGameModalVisible: false
+      isEndGameModalVisible: false,
+      reason: ''
     };
   },
   methods: {
@@ -60,6 +63,7 @@ export default {
       // when user closes this modal, we should reset the game
       // and go back to the main page...
       this.$router.push('/');
+      this.$socket.emit("RESET_GAME");
     }
   },
 }

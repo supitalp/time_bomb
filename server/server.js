@@ -50,6 +50,10 @@ function assignTeams() {
 	// Create array with available roles depending on number of players
 	var num_players = players.length
 	var roles_arr = [];
+	if(num_players == 2) {
+		// TODO: rm this debug tool (2 players normally not allowed)
+		roles_arr = ["Good", "Bad"];
+	}
 	if (num_players == 4 || num_players == 5) {
 		roles_arr = ["Good", "Good", "Good", "Bad", "Bad"];
 	}
@@ -181,27 +185,40 @@ function numDefuseFound() {
 	return num_defuse_found;
 }
 
-function endGame() {
+function resetGame() {
+	cards = [];
+	players = [];
+	current_player_id = 0;
+	num_turns_in_current_round = 0;
+	player_id_started_current_round = 0;
+	round_number = 1;
+	connected_users = [];
+}
+
+function endGame(reason) {
 	updateGameState();
-	Socketio.emit("END_GAME");
-	// now reset game...
+	setTimeout(() => Socketio.emit("END_GAME", reason), 750);
 }
 
 Socketio.on("connection", socket => {
 	console.log("New connection from socket: " + socket.id);
 
 	socket.on("USER_JOIN_ROOM", username => {
-		console.log("New user login: " + username);
+		console.log("New user login: " + username + " (" + socket.id + ")");
 		connected_users.push({ id: socket.id, username: username });
 		Socketio.emit("USER_JOIN_ROOM", connected_users);
 	});
 
-	socket.on("disconnect", () => {
-		console.log('User ' + socket.id + ' disconnected...');
+	socket.on("disconnect", (reason) => {
+		console.log('User ' + socket.id + ' disconnected because: ' + reason);
 		// remove corresponding user from list of users
 		connected_users = connected_users.filter(e => e.id !== socket.id);
 		// broadcast new list of users ("room state") to everyone
 		Socketio.emit("USER_JOIN_ROOM", connected_users);
+	});
+
+	socket.on("RESET_GAME", () => {
+		resetGame();
 	});
 
 	socket.on("START_GAME", () => {
@@ -210,6 +227,7 @@ Socketio.on("connection", socket => {
 		// prepare game: prepare deck, distribute cards to players
 		prepareNewGame();
 
+		console.log('Notify client on START_GAME');
 		Socketio.emit("START_GAME"); // notify clients to move to the game panel
 
 		updateGameState();
@@ -222,18 +240,19 @@ Socketio.on("connection", socket => {
 
 		if(u_card.type == 2) {
 			endGame("bomb");
+			return;
 		}
 		if(numDefuseFound() == players.length) {
 			endGame("defuse_found");
+			return;
 		}
 
 		// next turn: go to next player
 		let game_status = nextTurn();
 		if(game_status == "end_round") {
 			// notify users that the round is finished (so that they may display a dialog or else)
-			Socketio.emit("END_ROUND");
-			// leave time for dialog box to be opened
-			setTimeout(() => updateGameState(), 3000 + 100);
+			updateGameState();
+			setTimeout(() => Socketio.emit("END_ROUND"), 150);
 		}
 		else if(game_status == "end_game") {
 			endGame("rounds_expired");

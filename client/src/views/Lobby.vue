@@ -25,7 +25,8 @@ export default {
     },
     canStartGame() {
       var num_players = this.$store.getters.connected_users.length;
-      return num_players >= 4 && num_players <= 8;
+      // return num_players >= 4 && num_players <= 8;
+        return num_players >= 2 && num_players <= 8;
     }
   }
 }
