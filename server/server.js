@@ -39,6 +39,8 @@ function shuffle(array) {
 
 function createPlayers() {
 	// create players
+	// randomize player order
+	shuffle(connected_users);
 	for (var i = 0; i < connected_users.length; ++i) {
 		players.push({ id: i, socket_id: connected_users[i].id, name: connected_users[i].username, team: "",
 					   cards: [undefined, undefined, undefined, undefined, undefined] });
