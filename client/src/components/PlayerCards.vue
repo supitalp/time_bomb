@@ -5,7 +5,8 @@
             <img v-for="(card_id, index) in player.cards" :key="index"
                 class="card-preview"
                 :src="getImgUrl(cards[card_id])"
-                v-bind:class="{'is-playing':showCard(player, cards[card_id], current_player_id)}"
+                v-bind:class="[{'is-playing':showCard(player, cards[card_id], current_player_id)},
+                               {'blink-card':blinkCard(card_id)}]"
                 @click="clickOnCard(player, cards[card_id], current_player_id)" />
         </div>
     </div>
@@ -48,6 +49,9 @@ export default {
         },
         showCard(player, card, current_player_id) {
             return (!card.visible && player.id == current_player_id);
+        },
+        blinkCard(card_id) {
+            return card_id === this.$store.getters.last_card_played_id;
         }
     },
     computed: {
@@ -99,9 +103,21 @@ export default {
         padding: 1.25px;
         width: 15%;
         max-width: 90px;
-        /* border: 1px black solid; */
         box-shadow: 2px 2px grey;
         border-radius: 6%;
+    }
+
+    .blink-card {
+        animation: blinker 0.75s linear infinite;
+    }
+
+    @keyframes blinker {
+        from, to {
+            box-shadow: 0px 0px 0px green;
+        }
+        50% {
+            box-shadow: 0px 0px 20px green;
+        }
     }
 
     .is-playing {

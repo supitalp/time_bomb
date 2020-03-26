@@ -6,6 +6,7 @@ var connected_users = [];
 var cards = [];
 var players = [];
 var current_player_id = 0;
+var last_card_played_id = undefined;
 var num_turns_in_current_round = 0;
 var player_id_started_current_round = 0;
 var round_number = 1;
@@ -120,8 +121,6 @@ function dealCards() {
 	var deck_idx = 0;
 	for (var player_idx = 0; player_idx < players.length; ++player_idx) {
 		let player = players[player_idx];
-		// console.log("Before reshuffle: ");
-		// console.log(player.cards);
 		for(i = 0; i < players[player_idx].cards.length; ++i) {
 			let card_id = player.cards[i];
 			let card = cards[card_id];
@@ -130,8 +129,6 @@ function dealCards() {
 				deck_idx++;
 			}
 		}
-		// console.log("After reshuffle: ");
-		// console.log(player.cards);
 	}
 }
 
@@ -178,7 +175,8 @@ function updateGameState() {
 		players: players,
 		current_player_id: current_player_id,
 		round_number: round_number,
-		num_rounds: num_rounds});
+		num_rounds: num_rounds,
+		last_card_played_id: last_card_played_id});
 }
 
 function numDefuseFound() {
@@ -242,6 +240,9 @@ Socketio.on("connection", socket => {
 		u_card = cards.find(o => o.id === message.card.id);
 		u_card.visible = true;
 
+		console.log('User selected card: ' + message.card.id);
+		last_card_played_id = message.card.id;
+
 		if(u_card.type == 2) {
 			endGame("bomb");
 			return;
@@ -256,7 +257,7 @@ Socketio.on("connection", socket => {
 		if(game_status == "end_round") {
 			// notify users that the round is finished (so that they may display a dialog or else)
 			updateGameState();
-			setTimeout(() => Socketio.emit("END_ROUND"), 150);
+			setTimeout(() => Socketio.emit("END_ROUND"), 300);
 		}
 		else if(game_status == "end_game") {
 			endGame("rounds_expired");
