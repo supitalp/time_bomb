@@ -39,7 +39,8 @@ function shuffle(array) {
 function createPlayers() {
 	// create players
 	for (var i = 0; i < connected_users.length; ++i) {
-		players.push({ id: i, socket_id: connected_users[i].id, name: connected_users[i].username, team: "", cards: [] });
+		players.push({ id: i, socket_id: connected_users[i].id, name: connected_users[i].username, team: "",
+					   cards: [undefined, undefined, undefined, undefined, undefined] });
 	}
 
 	// assign a team to each player
@@ -102,8 +103,7 @@ function dealCards() {
 		* shuffle them,
 		* and distribute them to players in such a way
 		* that each player has a total of 5 cards.
-		* Also remember where the visible cards were so as to keep them
-		* at their original position.
+		* Leave the already visible cards at their original position.
 	*/
 
 	// Build a deck with the indices of all non-visible cards [0, 1, 2, 3, ..., 20]
@@ -113,45 +113,25 @@ function dealCards() {
 			deck.push(i);
 		}
 	}
-
-	var visible_card_locations = [];
-	// Remove non-visible cards from players' hands
-	for (var player_idx = 0; player_idx < players.length; ++player_idx) {
-		var new_hand = players[player_idx].cards.filter(function (card_idx) { return cards[card_idx].visible; });
-		// Remember, for each player, what were the positions of his visible cards if any
-		visible_card_locations.push(
-			players[player_idx].cards.reduce(function(indices_visible_cards, card_idx, i) { if(cards[card_idx].visible) indices_visible_cards.push(i); return indices_visible_cards; }, [])
-		);
-		players[player_idx].cards = new_hand;
-	}
-
 	// Shuffle deck: [7, 6, 1, ..., 13]
 	deck = shuffle(deck);
 
-	// Deal cards to players according to how much they need each
-	var global_card_idx = 0;
-	for (player_idx = 0; player_idx < players.length; player_idx++) {
-		var num_cards_for_player = num_cards_per_player - players[player_idx].cards.length;
-		for (var card_idx = 0; card_idx < num_cards_for_player; ++card_idx) {
-			players[player_idx].cards.push(deck[global_card_idx]);
-			global_card_idx++;
+	// Replace non-visible cards in players' hands with a one from the deck
+	var deck_idx = 0;
+	for (var player_idx = 0; player_idx < players.length; ++player_idx) {
+		let player = players[player_idx];
+		// console.log("Before reshuffle: ");
+		// console.log(player.cards);
+		for(i = 0; i < players[player_idx].cards.length; ++i) {
+			let card_id = player.cards[i];
+			let card = cards[card_id];
+			if(card === undefined || !card.visible) {
+				player.cards[i] = deck[deck_idx];
+				deck_idx++;
+			}
 		}
-	}
-
-	// Restore the visible cards to their original positions
-	for (player_idx = 0; player_idx < players.length; player_idx++) {
-		// console.log('Cards before reorganization: ');
-		// console.log(players[player_idx].cards);
-		// console.log('Prev card locations ' + players[player_idx].name + ': ');
-		// console.log(visible_card_locations[player_idx]);
-		for(i = 0; i < visible_card_locations[player_idx].length; ++i) {
-			let desired_location = visible_card_locations[player_idx][i];
-			// console.log('desired loc: ' + desired_location);
-			// swap cur_cards[i] and cur_cards[desired_location]
-			[players[player_idx].cards[desired_location], players[player_idx].cards[i]] = [players[player_idx].cards[i], players[player_idx].cards[desired_location]];
-		}
-		// console.log('Cards after reorganization: ');
-		// console.log(players[player_idx].cards);
+		// console.log("After reshuffle: ");
+		// console.log(player.cards);
 	}
 }
 
@@ -286,3 +266,20 @@ Socketio.on("connection", socket => {
 		}
 	});
 });
+
+function checkGame() {
+	// Check that all cards are present exactly once in players' hands
+	// Used for tests
+	var arr = [];
+	for(var i = 0; i < cards.length; ++i) {
+		arr[i] = 0;
+	}
+	for (var player_idx = 0; player_idx < players.length; ++player_idx) {
+		let player = players[player_idx];
+		for(i = 0; i < players[player_idx].cards.length; ++i) {
+			let card_id = player.cards[i];
+			arr[card_id]++;
+		}
+	}
+	console.log(arr);
+}
