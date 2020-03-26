@@ -195,6 +195,7 @@ function resetGame() {
 	player_id_started_current_round = 0;
 	round_number = 1;
 	connected_users = [];
+	last_card_played_id = undefined;
 }
 
 function endGame(reason) {
