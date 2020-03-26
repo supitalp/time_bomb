@@ -18,7 +18,7 @@ export default {
     props: ["player"],
     methods: {
         getImgUrl(card) {
-            var images = require.context('../../assets/cards/original');
+            var images = require.context('../../assets/cards/original/compressed');
             if(!card.visible) {
                 return images('./' + 'back.png');
             }

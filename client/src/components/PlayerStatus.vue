@@ -37,7 +37,7 @@ export default {
             return num;
         },
         getTeamImgUrl(team) {
-            var images = require.context('../../assets/cards/original');
+            var images = require.context('../../assets/cards/original/compressed');
             if(team === "Good") {
                 return images('./' + 'good_guy_1.png');
             }
@@ -46,7 +46,7 @@ export default {
             }
         },
         getImgUrl(type) {
-            var images = require.context('../../assets/cards/original');
+            var images = require.context('../../assets/cards/original/compressed');
             if(type == 0) {
                 return images('./' + 'neutral.png');
             }

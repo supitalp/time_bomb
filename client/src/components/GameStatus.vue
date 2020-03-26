@@ -43,11 +43,11 @@ export default {
             return num_defuse_found;
         },
         getTokenImgUrl(token) {
-            var images = require.context('../../assets/tokens/');
+            var images = require.context('../../assets/tokens/compressed');
                 return images('./' + 'token_' + token + '.png');
         },
         getDefuseImgUrl() {
-            var images = require.context('../../assets/cards/original/');
+            var images = require.context('../../assets/cards/original/compressed/');
                 return images('./' + 'defuse.png');
         }
     },
