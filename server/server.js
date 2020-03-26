@@ -244,12 +244,11 @@ Socketio.on("connection", socket => {
 
 		// Otherwise, we have to notify others, and potentially hold/stop the game.
 		console.log('User ' + user.username + ' (' + socket.id + ') disconnected because: ' + reason);
+		// remove corresponding user from list of users
+		connected_users = connected_users.filter(e => e.socket_id !== socket.id);
 		console.log('Game state: ' + game_state);
 		switch(game_state) {
 			case "SETUP":
-				// remove corresponding user from list of users
-				connected_users = connected_users.filter(e => e.socket_id !== socket.id);
-				console.log(connected_users);
 				// broadcast new list of users ("room state") to everyone
 				Socketio.emit("USER_JOIN_ROOM", connected_users);
 			break;
