@@ -1,9 +1,9 @@
 <template>
     <div class="game-status">
         <!-- <p>{{current_player_name}}'s turn!</p> -->
-        <p>Round number: {{this.$store.getters.round_number}} / {{this.$store.getters.num_rounds}}</p>
-        <p>Number of defuse found: {{this.numDefuseFound()}} / {{this.$store.getters.players.length}}</p>
-        <!-- <div class="round_counter">
+        <!-- <p>Round number: {{this.$store.getters.round_number}} / {{this.$store.getters.num_rounds}}</p> -->
+        <!-- <p>Number of defuse found: {{this.numDefuseFound()}} / {{this.$store.getters.players.length}}</p> -->
+        <div class="round_counter">
             <div class="token" >
                 <img :src="getTokenImgUrl(1)"
                     :class="{'is-elapsed':this.$store.getters.round_number >= 1}" />
@@ -21,12 +21,15 @@
                 :class="{'is-elapsed':this.$store.getters.round_number >= 4}" />
             </div>
         </div>
-        <div class="defuse_counter">
+        <div class="separator">
+        </div>
+        <div class="defuse-counter">
             <div v-for="i in num_players" :key="i" >
                 <img :src="getDefuseImgUrl()"
+                    class="defuse-element"
                     :class="{'is-defuse-found':numDefuseFound() < i}" />
             </div>
-        </div> -->
+        </div>
     </div>
 </template>
 
@@ -64,28 +67,33 @@ export default {
 
 <style scoped>
     .game-status {
+        height: 100px;
         width: 95%;
         margin: auto;
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         align-items: center;
         background: white;
         padding: 0px;
         border-bottom: 1px grey solid;
-        /* border: 1px black solid; */
     }
 
     .round_counter {
         flex: 1;
         display: flex;
-        /* border: 1px black solid; */
     }
 
-    .defuse_counter {
+    .separator {
+        flex: 1;
+    }
+
+    .defuse-counter {
         flex: 1;
         display: flex;
-        padding: 10px;
-        /* border: 1px black solid; */
+    }
+
+    .defuse-element {
+        margin: 10px;
     }
 
     .is-elapsed {
@@ -99,13 +107,11 @@ export default {
     }
 
     .token img {
-        width: 75%;
-        /* border: 1px black solid; */
+        max-height: 80px;
     }
 
-    .defuse_counter img {
-        width: 70%;
-        border: 1px black solid;
+    .defuse-counter img {
+        max-height: 80px;
         box-shadow: 2px 2px grey;
         border-radius: 6%;
     }
