@@ -207,9 +207,9 @@ function resetGame() {
 	last_card_played_id = undefined;
 }
 
-function endGame(reason) {
+function endGame(reason, username) {
 	updateGameState();
-	setTimeout(() => Socketio.emit("END_GAME", reason), 500);
+	setTimeout(() => Socketio.emit("END_GAME", reason), 400);
 }
 
 function findUser(socket_id) {
@@ -254,10 +254,7 @@ Socketio.on("connection", socket => {
 				Socketio.emit("USER_JOIN_ROOM", connected_users);
 			break;
 			case "GAME":
-				Socketio.emit("USER_DISCONNECTED");
-				 // TODO: this should stop the game for everyone
-				 // or better, pause it until the right user has reconnected :)
-				resetGame();
+				endGame("user_disconnected", user.username);
 			break;
 		}
 	});

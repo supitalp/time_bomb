@@ -61,6 +61,9 @@
           else if(reason === 'rounds_expired') {
             return "Time expired! The bad guys win!";
           }
+          else if(reason === 'user_disconnected') {
+            return "Error: one user has disconnected. Unfortunately we must stop the game :("
+          }
           else {
             return "Error: I don't know why the game ended.";
           }

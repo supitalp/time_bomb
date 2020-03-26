@@ -2,7 +2,6 @@
 
   <div id="app">
 
-    <EndRoundModal v-show="isEndRoundModalVisible" />
     <EndGameModal v-show="isEndGameModalVisible"
                   :reason="reason"
                   @close="closeEndGameModal" />
@@ -10,6 +9,10 @@
     <div class="turn-notification"
          v-bind:class="{'my-turn':this.$store.getters.my_username == current_player_name}">
       {{current_player_name}}'s turn!
+    </div>
+
+    <div class="end-of-turn-notification" v-show="isEndTurnNotificationVisible">
+      &#9200; New turn! Cards have been redistributed &#128256;
     </div>
 
     <GameStatus />
@@ -22,7 +25,6 @@
 import GameStatus from '../components/GameStatus'
 import Board from '../components/Board'
 import PlayerStatus from '../components/PlayerStatus'
-import EndRoundModal from '../components/EndRoundModal';
 import EndGameModal from '../components/EndGameModal';
 
 export default {
@@ -31,39 +33,28 @@ export default {
     GameStatus,
     Board,
     PlayerStatus,
-    EndRoundModal,
     EndGameModal
   },
   sockets: {
     END_ROUND: function() {
       console.log("End round triggered");
-      this.showEndRoundModal();
-      setTimeout(() => this.closeEndRoundModal(), 3000);
+      this.isEndTurnNotificationVisible = true;
+      setTimeout(() => {this.isEndTurnNotificationVisible = false;}, 2500);
     },
     END_GAME: function(reason) {
       this.reason = reason;
       console.log("Game has ended because: " + reason);
       this.showEndGameModal();
-    },
-    USER_DISCONNECTED: function() {
-      // show modal explaining that one user got disconnected...
-      this.$router.push('/');
     }
   },
   data () {
     return {
-      isEndRoundModalVisible: false,
       isEndGameModalVisible: false,
+      isEndTurnNotificationVisible: false,
       reason: ''
     };
   },
   methods: {
-    showEndRoundModal() {
-      this.isEndRoundModalVisible = true;
-    },
-    closeEndRoundModal() {
-      this.isEndRoundModalVisible = false;
-    },
     showEndGameModal() {
       this.isEndGameModalVisible = true;
     },
@@ -96,10 +87,21 @@ export default {
 }
 
 .turn-notification {
+  width: 100%;
   position: sticky;
   top: 0;
   z-index: 5;
   background: orange;
+  padding: 6px;
+  font-weight: bold;
+}
+
+.end-of-turn-notification {
+  width: 100%;
+  margin: auto;
+  /* position: sticky; */
+  z-index: 5;
+  background-color: rgba(150, 223, 241, 0.3);
   padding: 6px;
   font-weight: bold;
 }

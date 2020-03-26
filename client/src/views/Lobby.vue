@@ -1,10 +1,10 @@
 <template>
   <div class="lobby">
     <h1>Lobby</h1>
-    <h3>Players</h3>
     <form @submit.prevent="startGame">
     <input type="submit" value="Start Game" class="btn" :disabled="!Boolean(canStartGame())">
     </form>
+    <h3>Players</h3>
     <p v-for="user in this.$store.getters.connected_users" :key="user.id">
         {{user.username}}
     </p>
@@ -34,7 +34,7 @@ export default {
 
 <style scoped>
     input[type="submit"] {
-        padding: 7px;
+        padding: 15px;
         margin: 15px;
         border: 0px;
         background: #ff5454;
