@@ -59,7 +59,7 @@
             return "The bomb has been defused! The good guys win!";
           }
           else if(reason === 'rounds_expired') {
-            return "Time expired! The good guys win!";
+            return "Time expired! The bad guys win!";
           }
           else {
             return "Error: I don't know why the game ended.";
