@@ -5,6 +5,7 @@ const Socketio = require("socket.io")(Http);
 var connected_users = [];
 var cards = [];
 var players = [];
+var game_state = "SETUP"; // "SETUP" or "GAME"
 var current_player_id = 0;
 var last_card_played_id = undefined;
 var num_turns_in_current_round = 0;
@@ -42,7 +43,7 @@ function createPlayers() {
 	// randomize player order
 	shuffle(connected_users);
 	for (var i = 0; i < connected_users.length; ++i) {
-		players.push({ id: i, socket_id: connected_users[i].id, name: connected_users[i].username, team: "",
+		players.push({ id: i, socket_id: connected_users[i].socket_id, name: connected_users[i].username, team: "",
 					   cards: [undefined, undefined, undefined, undefined, undefined] });
 	}
 
@@ -57,6 +58,10 @@ function assignTeams() {
 	if(num_players == 2) {
 		// TODO: rm this debug tool (2 players normally not allowed)
 		roles_arr = ["Good", "Bad"];
+	}
+	else if(num_players == 3) {
+		// TODO: rm this debug tool (2 players normally not allowed)
+		roles_arr = ["Good", "Good", "Bad"];
 	}
 	if (num_players == 4 || num_players == 5) {
 		roles_arr = ["Good", "Good", "Good", "Bad", "Bad"];
@@ -178,7 +183,8 @@ function updateGameState() {
 		current_player_id: current_player_id,
 		round_number: round_number,
 		num_rounds: num_rounds,
-		last_card_played_id: last_card_played_id});
+		last_card_played_id: last_card_played_id,
+		game_state: game_state});
 }
 
 function numDefuseFound() {
@@ -190,6 +196,7 @@ function numDefuseFound() {
 }
 
 function resetGame() {
+	game_state = "SETUP";
 	cards = [];
 	players = [];
 	current_player_id = 0;
@@ -202,71 +209,133 @@ function resetGame() {
 
 function endGame(reason) {
 	updateGameState();
-	setTimeout(() => Socketio.emit("END_GAME", reason), 750);
+	setTimeout(() => Socketio.emit("END_GAME", reason), 500);
+}
+
+function findUser(socket_id) {
+	return connected_users.find(u => u.socket_id == socket_id);
 }
 
 Socketio.on("connection", socket => {
 	console.log("New connection from socket: " + socket.id);
 
 	socket.on("USER_JOIN_ROOM", username => {
-		console.log("New user login: " + username + " (" + socket.id + ")");
-		connected_users.push({ id: socket.id, username: username });
-		Socketio.emit("USER_JOIN_ROOM", connected_users);
+		switch(game_state) {
+			case "SETUP":
+				console.log("New user login: " + username + " (" + socket.id + ")");
+				connected_users.push({ socket_id: socket.id, username: username });
+				Socketio.emit("USER_JOIN_ROOM", connected_users);
+			break;
+			case "GAME":
+				console.log("Ignoring: " + username + " (" + socket.id + ")"
+							+ " trying to login because game is already running.");
+			break;
+		}
 	});
 
 	socket.on("disconnect", (reason) => {
-		console.log('User ' + socket.id + ' disconnected because: ' + reason);
-		// remove corresponding user from list of users
-		connected_users = connected_users.filter(e => e.id !== socket.id);
-		// broadcast new list of users ("room state") to everyone
-		Socketio.emit("USER_JOIN_ROOM", connected_users);
+		// Check if user was already logged in.
+		// If not, we can just ignore the disconnection.
+		let user = findUser(socket.id);
+		if(user === undefined) {
+			console.log('Ignoring socket ' + socket.id + ' disconnect because the user was not logged in');
+			return;
+		}
+
+		// Otherwise, we have to notify others, and potentially hold/stop the game.
+		console.log('User ' + user.username + ' (' + socket.id + ') disconnected because: ' + reason);
+		console.log('Game state: ' + game_state);
+		switch(game_state) {
+			case "SETUP":
+				// remove corresponding user from list of users
+				connected_users = connected_users.filter(e => e.socket_id !== socket.id);
+				console.log(connected_users);
+				// broadcast new list of users ("room state") to everyone
+				Socketio.emit("USER_JOIN_ROOM", connected_users);
+			break;
+			case "GAME":
+				Socketio.emit("USER_DISCONNECTED");
+				 // TODO: this should stop the game for everyone
+				 // or better, pause it until the right user has reconnected :)
+				resetGame();
+			break;
+		}
 	});
 
 	socket.on("RESET_GAME", () => {
-		resetGame();
+		switch(game_state) {
+			case "SETUP":
+				console.log("Ignoring RESET_GAME request from socket: "
+							+ socket.id + " because game is in SETUP state");
+			break;
+			case "GAME":
+				resetGame();
+			break;
+		}
 	});
 
 	socket.on("START_GAME", () => {
-		console.log('User ' + socket.id + ' asked to start game');
+		switch(game_state) {
+			case "SETUP":
+				let user = findUser(socket.id);
+				if(user === undefined) {
+					console.log('Ignoring START_GAME request from socket ' + socket.id + ' because user is not logged in.');
+					return;
+				}
 
-		// prepare game: prepare deck, distribute cards to players
-		prepareNewGame();
-
-		console.log('Notify client on START_GAME');
-		Socketio.emit("START_GAME"); // notify clients to move to the game panel
-
-		updateGameState();
+				console.log('User ' + user.username + ' (' + socket.id + ') is starting the game');
+				game_state = "GAME";
+				// prepare game: prepare deck, distribute cards to players
+				prepareNewGame();
+				// notify users to move to the game panel
+				Socketio.emit("START_GAME");
+				// send game state to all users
+				updateGameState();
+			break;
+			case "GAME":
+				console.log("Ignoring START_GAME request from socket: "
+							+ socket.id + " because game is already running");
+			break;
+		}
 	});
 
 	socket.on("SELECT_CARD", message => {
-		// update card that has just been made visible
-		u_card = cards.find(o => o.id === message.card.id);
-		u_card.visible = true;
+		switch(game_state) {
+			case "SETUP":
+				console.log("Ignoring SELECT_CARD request from socket: "
+							+ socket.id + " because game is not started yet");
+			break;
+			case "GAME":
+				// update card that has just been made visible
+				u_card = cards.find(o => o.id === message.card.id);
+				u_card.visible = true;
 
-		console.log('User selected card: ' + message.card.id);
-		last_card_played_id = message.card.id;
+				console.log('User selected card: ' + message.card.id);
+				last_card_played_id = message.card.id;
 
-		if(u_card.type == 2) {
-			endGame("bomb");
-			return;
-		}
-		if(numDefuseFound() == players.length) {
-			endGame("defuse_found");
-			return;
-		}
+				if(u_card.type == 2) {
+					endGame("bomb");
+					return;
+				}
+				if(numDefuseFound() == players.length) {
+					endGame("defuse_found");
+					return;
+				}
 
-		// next turn: go to next player
-		let game_status = nextTurn();
-		if(game_status == "end_round") {
-			// notify users that the round is finished (so that they may display a dialog or else)
-			updateGameState();
-			setTimeout(() => Socketio.emit("END_ROUND"), 300);
-		}
-		else if(game_status == "end_game") {
-			endGame("rounds_expired");
-		}
-		else {
-			updateGameState();
+				// next turn: go to next player
+				let game_status = nextTurn();
+				if(game_status == "end_round") {
+					// notify users that the round is finished (so that they may display a dialog or else)
+					updateGameState();
+					setTimeout(() => Socketio.emit("END_ROUND"), 300);
+				}
+				else if(game_status == "end_game") {
+					endGame("rounds_expired");
+				}
+				else {
+					updateGameState();
+				}
+			break;
 		}
 	});
 });

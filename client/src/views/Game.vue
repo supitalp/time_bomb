@@ -44,6 +44,10 @@ export default {
       this.reason = reason;
       console.log("Game has ended because: " + reason);
       this.showEndGameModal();
+    },
+    USER_DISCONNECTED: function() {
+      // show modal explaining that one user got disconnected...
+      this.$router.push('/');
     }
   },
   data () {

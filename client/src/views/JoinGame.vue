@@ -3,7 +3,7 @@
     <form @submit.prevent="joinGame">
     <input type="text" v-model="username" name="username" placeholder="My username">
     <br />
-    <input type="submit" value="Join Game" class="btn" :disabled="!Boolean(username)">
+    <input type="submit" value="Join Game" class="btn" :disabled="canJoinGame()">
     </form>
   </div>
 </template>
@@ -25,6 +25,10 @@ export default {
       this.$socket.emit("USER_JOIN_ROOM", this.username);
       this.$store.commit('loginUser', this.username);
       this.$router.push('/lobby');
+    },
+    canJoinGame() {
+      // TODO: check if username is taken
+      return !this.username;
     }
   }
 }

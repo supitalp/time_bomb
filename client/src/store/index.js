@@ -12,7 +12,8 @@ export default new Vuex.Store({
     round_number: 1,
     num_rounds: 1,
     my_username: "",
-    last_card_played_id: undefined
+    last_card_played_id: undefined,
+    game_state: "SETUP"
   },
   mutations: {
     loginUser(state, username) {
@@ -32,6 +33,7 @@ export default new Vuex.Store({
       state.round_number = message.round_number;
       state.num_rounds = message.num_rounds;
       state.last_card_played_id = message.last_card_played_id;
+      state.game_state = message.game_state;
     }
   },
   getters: {
@@ -42,7 +44,8 @@ export default new Vuex.Store({
     round_number: state => state.round_number,
     num_rounds: state => state.num_rounds,
     my_username: state => state.my_username,
-    last_card_played_id: state => state.last_card_played_id
+    last_card_played_id: state => state.last_card_played_id,
+    game_state: state => state.game_state
   },
   actions: {
   },
