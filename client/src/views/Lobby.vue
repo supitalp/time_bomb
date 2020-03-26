@@ -2,7 +2,7 @@
   <div class="lobby">
     <h1>Lobby</h1>
     <h3>Players</h3>
-    <form @submit="startGame">
+    <form @submit.prevent="startGame">
     <input type="submit" value="Start Game" class="btn" :disabled="!Boolean(canStartGame())">
     </form>
     <p v-for="user in this.$store.getters.connected_users" :key="user.id">
