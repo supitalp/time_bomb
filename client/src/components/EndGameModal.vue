@@ -77,7 +77,7 @@
 
 <style>
   .modal-backdrop {
-    z-index: 2;
+    z-index: 10;
     position: fixed;
     top: 0;
     bottom: 0;

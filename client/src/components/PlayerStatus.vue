@@ -84,6 +84,9 @@ export default {
 
         background: #ffffff;
         border-top: 1px grey solid;
+        position: sticky;
+        bottom: 0;
+        z-index: 5;
     }
 
     .player-identity {

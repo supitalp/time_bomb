@@ -92,6 +92,9 @@ export default {
 }
 
 .turn-notification {
+  position: sticky;
+  top: 0;
+  z-index: 5;
   background: orange;
   padding: 6px;
   font-weight: bold;

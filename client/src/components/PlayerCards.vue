@@ -78,19 +78,17 @@ export default {
         display: flex;
         background: #ffffff;
         align-items: center;
-        /* border: 1px black solid; */
     }
 
     .player-name {
         flex: 1;
-        /* border: 1px black solid; */
+        font-size: 2vmax;
     }
 
     .cards-in-row {
         flex: 5;
         display: flex;
         justify-content: space-evenly;
-        /* border: 1px black solid; */
     }
 
     .card {
@@ -103,7 +101,7 @@ export default {
         padding: 1.25px;
         width: 15%;
         max-width: 90px;
-        box-shadow: 2px 2px grey;
+        box-shadow: 2px 2px 2px grey;
         border-radius: 6%;
     }
 
@@ -122,8 +120,8 @@ export default {
 
     .is-playing {
         font-weight: bold;
-        -webkit-filter: grayscale(100%);
-        filter: grayscale(100%);
+        /* -webkit-filter: grayscale(100%); */
+        /* filter: grayscale(100%); */
     }
 
 </style>

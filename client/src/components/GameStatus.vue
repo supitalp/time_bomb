@@ -67,7 +67,6 @@ export default {
 
 <style scoped>
     .game-status {
-        height: 100px;
         width: 95%;
         margin: auto;
         display: flex;
@@ -79,8 +78,9 @@ export default {
     }
 
     .round_counter {
-        flex: 1;
+        flex: 2;
         display: flex;
+        justify-content: center;
     }
 
     .separator {
@@ -93,7 +93,8 @@ export default {
     }
 
     .defuse-element {
-        margin: 10px;
+        margin-top: 4px;
+        margin-bottom: 4px;
     }
 
     .is-elapsed {
@@ -106,12 +107,16 @@ export default {
         filter: grayscale(100%);
     }
 
+    .token {
+        padding: 2px;
+    }
+
     .token img {
-        max-height: 80px;
+        width: 80%;
     }
 
     .defuse-counter img {
-        max-height: 80px;
+        width: 55%;
         box-shadow: 2px 2px grey;
         border-radius: 6%;
     }
