@@ -19,7 +19,9 @@
           id="modalDescription"
         >
           <slot name="body">
-            {{getTextDescription(reason)}}
+            <p>{{getTextDescription(reason)}}</p>
+            <p>Good guys: {{getPlayersInTeam("Good")}}</p>
+            <p>Bad guys: {{getPlayersInTeam("Bad")}}</p>
           </slot>
         </section>
         <footer class="modal-footer">
@@ -62,6 +64,12 @@
           else {
             return "Error: I don't know why the game ended.";
           }
+        },
+        getPlayersInTeam(team) {
+          let player_names = [];
+          let players = this.$store.getters.players;
+          player_names = players.filter((player) => player.team === team).map((player) => player.name);
+          return player_names.join(', ')
         }
     }
   };
