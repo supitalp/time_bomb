@@ -325,7 +325,7 @@ Socketio.on("connection", socket => {
 				if(game_status == "end_round") {
 					// notify users that the round is finished (so that they may display a dialog or else)
 					updateGameState();
-					setTimeout(() => Socketio.emit("END_ROUND"), 300);
+					Socketio.emit("END_ROUND");
 				}
 				else if(game_status == "end_game") {
 					endGame("rounds_expired");
