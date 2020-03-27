@@ -1,6 +1,17 @@
-const Express = require("express")();
-const Http = require("http").Server(Express);
+const Express = require('express');
+const Http = require('http').Server(Express);
 const Socketio = require("socket.io")(Http);
+
+const app = Express();
+const port = process.env.PORT || 3000;
+
+app.use(Express.static('public'));
+app.listen(8080, () => console.log("Static server listening at: " + 8080 + "..."));
+
+Http.listen(port, () => {
+	console.log("Listening at :" + port + "...");
+});
+
 
 var connected_users = [];
 var cards = [];
@@ -13,10 +24,6 @@ var player_id_started_current_round = 0;
 var round_number = 1;
 var num_rounds = 4;
 const num_cards_per_player = 5;
-
-Http.listen(3000, () => {
-	console.log("Listening at :3000...");
-});
 
 function shuffle(array) {
 	// https://stackoverflow.com/a/2450976
