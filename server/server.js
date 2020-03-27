@@ -1,17 +1,12 @@
-const Express = require('express');
-const Http = require('http').Server(Express);
-const Socketio = require("socket.io")(Http);
+var express = require('express')
+var app = express()
+app.use(express.static('public'))
+var server = require('http').createServer(app)
+var Socketio = require('socket.io')(server)
 
-const app = Express();
 const port = process.env.PORT || 3000;
-
-app.use(Express.static('public'));
-app.listen(8080, () => console.log("Static server listening at: " + 8080 + "..."));
-
-Http.listen(port, () => {
-	console.log("Listening at :" + port + "...");
-});
-
+console.log("Listening on port :" + port);
+server.listen(port);
 
 var connected_users = [];
 var cards = [];
