@@ -20,6 +20,14 @@ var round_number = 1;
 var num_rounds = 4;
 const num_cards_per_player = 5;
 
+
+function arrayRotate(arr, reverse) {
+	// https://stackoverflow.com/a/23368052
+	if (reverse) arr.unshift(arr.pop());
+	else arr.push(arr.shift());
+	return arr;
+  }
+
 function shuffle(array) {
 	// https://stackoverflow.com/a/2450976
 	var currentIndex = array.length, temporaryValue, randomIndex;
@@ -156,6 +164,13 @@ function nextTurn() {
 		player_id_started_current_round = (player_id_started_current_round + 1) % num_players;
 		current_player_id = player_id_started_current_round;
 		round_number++;
+
+		/* rotate player order such that the first player
+		is always the one starting the round
+		for now, I disabled this because it causes the players to "jump" to
+		their new position right after the player has clicked the card, which is weird.
+		*/
+		// players = arrayRotate(players);
 
 		if(round_number > num_rounds) {
 			return "end_game";
