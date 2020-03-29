@@ -23,13 +23,12 @@ var round_number = 1;
 var num_rounds = 4;
 const num_cards_per_player = 5;
 
-
-function arrayRotate(arr, reverse) {
-	// https://stackoverflow.com/a/23368052
-	if (reverse) arr.unshift(arr.pop());
-	else arr.push(arr.shift());
-	return arr;
-  }
+// function arrayRotate(arr, reverse) {
+// 	// https://stackoverflow.com/a/23368052
+// 	if (reverse) arr.unshift(arr.pop());
+// 	else arr.push(arr.shift());
+// 	return arr;
+// }
 
 function shuffle(array) {
 	// https://stackoverflow.com/a/2450976
@@ -56,8 +55,10 @@ function createPlayers() {
 	// randomize player order
 	shuffle(connected_users);
 	for (var i = 0; i < connected_users.length; ++i) {
-		players.push({ id: i, socket_id: connected_users[i].socket_id, name: connected_users[i].username, team: "",
-					   cards: [undefined, undefined, undefined, undefined, undefined] });
+		players.push({
+			id: i, socket_id: connected_users[i].socket_id, name: connected_users[i].username, team: "",
+			cards: [undefined, undefined, undefined, undefined, undefined]
+		});
 	}
 
 	// assign a team to each player
@@ -227,7 +228,7 @@ function resetGame() {
 	last_card_played_id = undefined;
 }
 
-function endGame(reason, username) {
+function endGame(reason) {
 	updateGameState();
 	setTimeout(() => Socketio.emit("END_GAME", reason), 400);
 }
@@ -292,7 +293,7 @@ Socketio.on("connection", socket => {
 
 	socket.on("START_GAME", () => {
 		switch(game_state) {
-			case "SETUP":
+			case "SETUP": {
 				let user = findUser(socket.id);
 				if(user === undefined) {
 					console.log('Ignoring START_GAME request from socket ' + socket.id + ' because user is not logged in.');
@@ -307,7 +308,8 @@ Socketio.on("connection", socket => {
 				Socketio.emit("START_GAME");
 				// send game state to all users
 				updateGameState();
-			break;
+				break;
+			}
 			case "GAME":
 				console.log("Ignoring START_GAME request from socket: "
 							+ socket.id + " because game is already running");
@@ -321,9 +323,9 @@ Socketio.on("connection", socket => {
 				console.log("Ignoring SELECT_CARD request from socket: "
 							+ socket.id + " because game is not started yet");
 			break;
-			case "GAME":
+			case "GAME": {
 				// update card that has just been made visible
-				u_card = cards.find(o => o.id === message.card.id);
+				let u_card = cards.find(o => o.id === message.card.id);
 				u_card.visible = true;
 
 				console.log('User selected card: ' + message.card.id);
@@ -351,24 +353,8 @@ Socketio.on("connection", socket => {
 				else {
 					updateGameState();
 				}
-			break;
+				break;
+			}
 		}
 	});
 });
-
-function checkGame() {
-	// Check that all cards are present exactly once in players' hands
-	// Used for tests
-	var arr = [];
-	for(var i = 0; i < cards.length; ++i) {
-		arr[i] = 0;
-	}
-	for (var player_idx = 0; player_idx < players.length; ++player_idx) {
-		let player = players[player_idx];
-		for(i = 0; i < players[player_idx].cards.length; ++i) {
-			let card_id = player.cards[i];
-			arr[card_id]++;
-		}
-	}
-	console.log(arr);
-}
