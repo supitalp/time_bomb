@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import GAME_STATE from '../common/game_states'
+import GAME_PHASE from '../common/game-phase'
 
 Vue.use(Vuex)
 
@@ -14,7 +14,7 @@ export default new Vuex.Store({
     num_rounds: 1,
     my_username: "",
     last_card_played_id: undefined,
-    game_state: GAME_STATE.SETUP
+    game_phase: GAME_PHASE.SETUP
   },
   mutations: {
     loginUser(state, username) {
@@ -34,7 +34,7 @@ export default new Vuex.Store({
       state.round_number = message.round_number;
       state.num_rounds = message.num_rounds;
       state.last_card_played_id = message.last_card_played_id;
-      state.game_state = message.game_state;
+      state.game_phase = message.game_phase;
     }
   },
   getters: {
@@ -46,7 +46,7 @@ export default new Vuex.Store({
     num_rounds: state => state.num_rounds,
     my_username: state => state.my_username,
     last_card_played_id: state => state.last_card_played_id,
-    game_state: state => state.game_state
+    game_phase: state => state.game_phase
   },
   actions: {
   },

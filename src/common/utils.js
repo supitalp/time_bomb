@@ -1,11 +1,3 @@
-
-// function arrayRotate(arr, reverse) {
-// 	// https://stackoverflow.com/a/23368052
-// 	if (reverse) arr.unshift(arr.pop());
-// 	else arr.push(arr.shift());
-// 	return arr;
-// }
-
 module.exports = {
     shuffle: function (array) {
         // https://stackoverflow.com/a/2450976
@@ -25,5 +17,18 @@ module.exports = {
         }
 
         return array;
+    },
+    arrayRotate: function (arr, reverse) {
+        // https://stackoverflow.com/a/23368052
+        if (reverse) arr.unshift(arr.pop());
+        else arr.push(arr.shift());
+        return arr;
+    },
+    validateUsername: function (name) {
+        name = name.trim();
+        const minChars = 1;
+        const maxChars = 20;
+        let regex = new RegExp(`^[0-9a-zA-Z ]{${minChars},${maxChars}}$`);
+        return name.match(regex);
     }
 };

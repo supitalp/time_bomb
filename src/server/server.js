@@ -4,7 +4,7 @@ var app = express()
 var server = require('http').createServer(app)
 var Socketio = require('socket.io')(server)
 const MESSAGE = require('../common/messages');
-const GAME_STATE = require('../common/game_states');
+const GAME_PHASE = require('../common/game-phase');
 
 if(process.env.NODE_ENV !== "development") {
 	// in production, serve frontend web interface compiled with Vue.js
@@ -19,7 +19,7 @@ server.listen(port);
 var connected_users = [];
 var cards = [];
 var players = [];
-var game_state = GAME_STATE.SETUP;
+var game_phase = GAME_PHASE.SETUP;
 var current_player_id = 0;
 var last_card_played_id = undefined;
 var num_turns_in_current_round = 0;
@@ -183,7 +183,7 @@ function updateGameState() {
 		round_number: round_number,
 		num_rounds: num_rounds,
 		last_card_played_id: last_card_played_id,
-		game_state: game_state});
+		game_phase: game_phase});
 }
 
 function numDefuseFound() {
@@ -195,7 +195,7 @@ function numDefuseFound() {
 }
 
 function resetGame() {
-	game_state = GAME_STATE.SETUP;
+	game_phase = GAME_PHASE.SETUP;
 	cards = [];
 	players = [];
 	current_player_id = 0;
@@ -219,13 +219,13 @@ Socketio.on("connection", socket => {
 	console.log("New connection from socket: " + socket.id);
 
 	socket.on(MESSAGE.USER_JOIN_ROOM, username => {
-		switch(game_state) {
-			case GAME_STATE.SETUP:
+		switch(game_phase) {
+			case GAME_PHASE.SETUP:
 				console.log("New user login: " + username + " (" + socket.id + ")");
 				connected_users.push({ socket_id: socket.id, username: username });
 				Socketio.emit(MESSAGE.USER_JOIN_ROOM, connected_users);
 			break;
-			case GAME_STATE.GAME:
+			case GAME_PHASE.GAME:
 				console.log("Ignoring: " + username + " (" + socket.id + ")"
 							+ " trying to login because game is already running.");
 			break;
@@ -245,33 +245,33 @@ Socketio.on("connection", socket => {
 		console.log('User ' + user.username + ' (' + socket.id + ') disconnected because: ' + reason);
 		// remove corresponding user from list of users
 		connected_users = connected_users.filter(e => e.socket_id !== socket.id);
-		console.log('Game state: ' + game_state);
-		switch(game_state) {
-			case GAME_STATE.SETUP:
+		console.log('Game state: ' + game_phase);
+		switch(game_phase) {
+			case GAME_PHASE.SETUP:
 				// broadcast new list of users ("room state") to everyone
 				Socketio.emit(MESSAGE.USER_JOIN_ROOM, connected_users);
 			break;
-			case GAME_STATE.GAME:
+			case GAME_PHASE.GAME:
 				endGame("user_disconnected", user.username);
 			break;
 		}
 	});
 
 	socket.on(MESSAGE.RESET_GAME, () => {
-		switch(game_state) {
-			case GAME_STATE.SETUP:
+		switch(game_phase) {
+			case GAME_PHASE.SETUP:
 				console.log("Ignoring RESET_GAME request from socket: "
 							+ socket.id + " because game is in SETUP state");
 			break;
-			case GAME_STATE.GAME:
+			case GAME_PHASE.GAME:
 				resetGame();
 			break;
 		}
 	});
 
 	socket.on(MESSAGE.START_GAME, () => {
-		switch(game_state) {
-			case GAME_STATE.SETUP: {
+		switch(game_phase) {
+			case GAME_PHASE.SETUP: {
 				let user = findUser(socket.id);
 				if(user === undefined) {
 					console.log('Ignoring START_GAME request from socket ' + socket.id + ' because user is not logged in.');
@@ -279,7 +279,7 @@ Socketio.on("connection", socket => {
 				}
 
 				console.log('User ' + user.username + ' (' + socket.id + ') is starting the game');
-				game_state = GAME_STATE.GAME
+				game_phase = GAME_PHASE.GAME
 				// prepare game: prepare deck, distribute cards to players
 				prepareNewGame();
 				// notify users to move to the game panel
@@ -288,7 +288,7 @@ Socketio.on("connection", socket => {
 				updateGameState();
 				break;
 			}
-			case GAME_STATE.GAME:
+			case GAME_PHASE.GAME:
 				console.log("Ignoring START_GAME request from socket: "
 							+ socket.id + " because game is already running");
 			break;
@@ -296,12 +296,12 @@ Socketio.on("connection", socket => {
 	});
 
 	socket.on(MESSAGE.SELECT_CARD, message => {
-		switch(game_state) {
-			case GAME_STATE.SETUP:
+		switch(game_phase) {
+			case GAME_PHASE.SETUP:
 				console.log("Ignoring SELECT_CARD request from socket: "
 							+ socket.id + " because game is not started yet");
 			break;
-			case GAME_STATE.GAME: {
+			case GAME_PHASE.GAME: {
 				// update card that has just been made visible
 				let u_card = cards.find(o => o.id === message.card.id);
 				u_card.visible = true;
