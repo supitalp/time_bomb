@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import GAME_STATE from '../common/game_states'
 
 Vue.use(Vuex)
 
@@ -13,7 +14,7 @@ export default new Vuex.Store({
     num_rounds: 1,
     my_username: "",
     last_card_played_id: undefined,
-    game_state: "SETUP"
+    game_state: GAME_STATE.SETUP
   },
   mutations: {
     loginUser(state, username) {
