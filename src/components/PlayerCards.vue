@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import MESSAGE from '../common/messages';
 export default {
     name: "PlayerCards",
     props: ["player"],
@@ -53,7 +54,7 @@ export default {
                 return; // prevent user from selecting an already discovered card
             }
             card.visible = true;
-            this.$socket.emit("SELECT_CARD", {player: player, card: card});
+            this.$socket.emit(MESSAGE.SELECT_CARD, {player: player, card: card});
         },
         showCard(player, card, current_player_id) {
             return (!card.visible && player.id == current_player_id);

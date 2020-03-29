@@ -27,6 +27,7 @@ import GameStatus from '../components/GameStatus'
 import Board from '../components/Board'
 import PlayerStatus from '../components/PlayerStatus'
 import EndGameModal from '../components/EndGameModal';
+import MESSAGE from '../common/messages'
 
 export default {
   name: 'Game',
@@ -64,7 +65,7 @@ export default {
       // when user closes this modal, we should reset the game
       // and go back to the main page...
       this.$router.push('/');
-      this.$socket.emit("RESET_GAME");
+      this.$socket.emit(MESSAGE.RESET_GAME);
     },
     findPlayerById(player_id) {
         return this.$store.getters.players.find(u => u.id == player_id);

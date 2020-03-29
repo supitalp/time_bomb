@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import MESSAGE from '../common/messages'
 export default {
   name: "JoinGame",
   data() {
@@ -21,7 +22,7 @@ export default {
   methods: {
     joinGame() {
       console.log(this.username + ' joined game!');
-      this.$socket.emit("USER_JOIN_ROOM", this.username);
+      this.$socket.emit(MESSAGE.USER_JOIN_ROOM, this.username);
       this.$store.commit('loginUser', this.username);
       this.$router.push('/lobby');
     },

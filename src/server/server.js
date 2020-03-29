@@ -1,9 +1,13 @@
+const utils = require('../common/utils');
 var express = require('express')
 var app = express()
 var server = require('http').createServer(app)
 var Socketio = require('socket.io')(server)
+const MESSAGE = require('../common/messages');
 
 if(process.env.NODE_ENV !== "development") {
+	// in production, serve frontend web interface compiled with Vue.js
+	// it is not necessary in development because Vue.js will directly serve it
 	app.use(express.static('dist'))
 }
 
@@ -23,37 +27,10 @@ var round_number = 1;
 var num_rounds = 4;
 const num_cards_per_player = 5;
 
-// function arrayRotate(arr, reverse) {
-// 	// https://stackoverflow.com/a/23368052
-// 	if (reverse) arr.unshift(arr.pop());
-// 	else arr.push(arr.shift());
-// 	return arr;
-// }
-
-function shuffle(array) {
-	// https://stackoverflow.com/a/2450976
-	var currentIndex = array.length, temporaryValue, randomIndex;
-
-	// While there remain elements to shuffle...
-	while (0 !== currentIndex) {
-
-		// Pick a remaining element...
-		randomIndex = Math.floor(Math.random() * currentIndex);
-		currentIndex -= 1;
-
-		// And swap it with the current element.
-		temporaryValue = array[currentIndex];
-		array[currentIndex] = array[randomIndex];
-		array[randomIndex] = temporaryValue;
-	}
-
-	return array;
-}
-
 function createPlayers() {
 	// create players
 	// randomize player order
-	shuffle(connected_users);
+	utils.shuffle(connected_users);
 	for (var i = 0; i < connected_users.length; ++i) {
 		players.push({
 			id: i, socket_id: connected_users[i].socket_id, name: connected_users[i].username, team: "",
@@ -88,7 +65,7 @@ function assignTeams() {
 	}
 
 	// Shuffle roles
-	roles_arr = shuffle(roles_arr);
+	roles_arr = utils.shuffle(roles_arr);
 
 	// Deal one role for each player
 	for (var player_idx = 0; player_idx < num_players; ++player_idx) {
@@ -136,7 +113,7 @@ function dealCards() {
 		}
 	}
 	// Shuffle deck: [7, 6, 1, ..., 13]
-	deck = shuffle(deck);
+	deck = utils.shuffle(deck);
 
 	// Replace non-visible cards in players' hands with a one from the deck
 	var deck_idx = 0;
@@ -199,7 +176,7 @@ function prepareNewGame() {
 
 function updateGameState() {
 	// broadcast new game state to everyone
-	Socketio.emit("UPDATE_GAME_STATE", { cards: cards,
+	Socketio.emit(MESSAGE.UPDATE_GAME_STATE, { cards: cards,
 		players: players,
 		current_player_id: current_player_id,
 		round_number: round_number,
@@ -230,7 +207,7 @@ function resetGame() {
 
 function endGame(reason) {
 	updateGameState();
-	setTimeout(() => Socketio.emit("END_GAME", reason), 400);
+	setTimeout(() => Socketio.emit(MESSAGE.END_GAME, reason), 400);
 }
 
 function findUser(socket_id) {
@@ -240,12 +217,12 @@ function findUser(socket_id) {
 Socketio.on("connection", socket => {
 	console.log("New connection from socket: " + socket.id);
 
-	socket.on("USER_JOIN_ROOM", username => {
+	socket.on(MESSAGE.USER_JOIN_ROOM, username => {
 		switch(game_state) {
 			case "SETUP":
 				console.log("New user login: " + username + " (" + socket.id + ")");
 				connected_users.push({ socket_id: socket.id, username: username });
-				Socketio.emit("USER_JOIN_ROOM", connected_users);
+				Socketio.emit(MESSAGE.USER_JOIN_ROOM, connected_users);
 			break;
 			case "GAME":
 				console.log("Ignoring: " + username + " (" + socket.id + ")"
@@ -271,7 +248,7 @@ Socketio.on("connection", socket => {
 		switch(game_state) {
 			case "SETUP":
 				// broadcast new list of users ("room state") to everyone
-				Socketio.emit("USER_JOIN_ROOM", connected_users);
+				Socketio.emit(MESSAGE.USER_JOIN_ROOM, connected_users);
 			break;
 			case "GAME":
 				endGame("user_disconnected", user.username);
@@ -279,7 +256,7 @@ Socketio.on("connection", socket => {
 		}
 	});
 
-	socket.on("RESET_GAME", () => {
+	socket.on(MESSAGE.RESET_GAME, () => {
 		switch(game_state) {
 			case "SETUP":
 				console.log("Ignoring RESET_GAME request from socket: "
@@ -291,7 +268,7 @@ Socketio.on("connection", socket => {
 		}
 	});
 
-	socket.on("START_GAME", () => {
+	socket.on(MESSAGE.START_GAME, () => {
 		switch(game_state) {
 			case "SETUP": {
 				let user = findUser(socket.id);
@@ -305,7 +282,7 @@ Socketio.on("connection", socket => {
 				// prepare game: prepare deck, distribute cards to players
 				prepareNewGame();
 				// notify users to move to the game panel
-				Socketio.emit("START_GAME");
+				Socketio.emit(MESSAGE.START_GAME);
 				// send game state to all users
 				updateGameState();
 				break;
@@ -317,7 +294,7 @@ Socketio.on("connection", socket => {
 		}
 	});
 
-	socket.on("SELECT_CARD", message => {
+	socket.on(MESSAGE.SELECT_CARD, message => {
 		switch(game_state) {
 			case "SETUP":
 				console.log("Ignoring SELECT_CARD request from socket: "
@@ -345,7 +322,7 @@ Socketio.on("connection", socket => {
 				if(game_status == "end_round") {
 					// notify users that the round is finished (so that they may display a dialog or else)
 					updateGameState();
-					Socketio.emit("END_ROUND");
+					Socketio.emit(MESSAGE.END_ROUND);
 				}
 				else if(game_status == "end_game") {
 					endGame("rounds_expired");

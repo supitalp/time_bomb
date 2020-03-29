@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import MESSAGE from '../common/messages'
 export default {
   name: "Lobby",
   sockets: {
@@ -21,7 +22,7 @@ export default {
   },
   methods: {
     startGame() {
-      this.$socket.emit("START_GAME");
+      this.$socket.emit(MESSAGE.START_GAME);
     },
     canStartGame() {
       var num_players = this.$store.getters.connected_users.length;
