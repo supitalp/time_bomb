@@ -64,7 +64,7 @@ export default {
       this.isEndGameModalVisible = false;
       // when user closes this modal, we should reset the game
       // and go back to the main page...
-      this.$router.push('/');
+      this.$router.replace('/');
       this.$socket.emit(MESSAGE.RESET_GAME);
     },
     findPlayerById(player_id) {

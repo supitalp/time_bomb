@@ -24,7 +24,7 @@ export default {
       console.log(this.username + ' joined game!');
       this.$socket.emit(MESSAGE.USER_JOIN_ROOM, this.username);
       this.$store.commit('loginUser', this.username);
-      this.$router.push('/lobby');
+      this.$router.replace('/lobby');
     },
     canJoinGame() {
       // TODO: check if username is taken

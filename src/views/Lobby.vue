@@ -17,7 +17,7 @@ export default {
   name: "Lobby",
   sockets: {
     START_GAME: function() {
-      this.$router.push('/game');
+      this.$router.replace('/game');
     }
   },
   methods: {
