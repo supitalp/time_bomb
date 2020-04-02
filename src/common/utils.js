@@ -30,5 +30,8 @@ module.exports = {
         const maxChars = 20;
         let regex = new RegExp(`^[0-9a-zA-Z ]{${minChars},${maxChars}}$`);
         return name.match(regex);
+    },
+    randomInt: function (max) { // max-exclusive
+        return Math.floor(Math.random() * max);
     }
 };

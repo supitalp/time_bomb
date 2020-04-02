@@ -3,7 +3,6 @@
   <div id="app">
 
     <EndGameModal v-show="isEndGameModalVisible"
-                  :reason="reason"
                   @close="closeEndGameModal" />
 
     <div class="notification end-of-turn" v-show="isEndTurnNotificationVisible">
@@ -12,8 +11,8 @@
 
     <div class="notification turn"
          v-show="!isEndTurnNotificationVisible"
-         v-bind:class="{'my-turn':this.$store.getters.my_username == current_player_name}">
-      {{current_player_name}}'s turn!
+         v-bind:class="{'my-turn':this.$store.getters.username == this.$store.getters.gameState.whoseTurn}">
+      {{this.$store.getters.gameState.whoseTurn}}'s turn!
     </div>
 
     <GameStatus />
@@ -27,7 +26,7 @@ import GameStatus from '../components/GameStatus'
 import Board from '../components/Board'
 import PlayerStatus from '../components/PlayerStatus'
 import EndGameModal from '../components/EndGameModal';
-import MESSAGE from '../common/messages'
+import MESSAGE from '../common/message'
 
 export default {
   name: 'Game',
@@ -38,14 +37,11 @@ export default {
     EndGameModal
   },
   sockets: {
-    END_ROUND: function() {
-      console.log("End round triggered");
+    NEW_ROUND: function() {
       this.isEndTurnNotificationVisible = true;
       setTimeout(() => {this.isEndTurnNotificationVisible = false;}, 5000);
     },
-    END_GAME: function(reason) {
-      this.reason = reason;
-      console.log("Game has ended because: " + reason);
+    END_GAME: function() {
       this.showEndGameModal();
     }
   },
@@ -53,7 +49,6 @@ export default {
     return {
       isEndGameModalVisible: false,
       isEndTurnNotificationVisible: false,
-      reason: ''
     };
   },
   methods: {
@@ -64,18 +59,9 @@ export default {
       this.isEndGameModalVisible = false;
       // when user closes this modal, we should reset the game
       // and go back to the main page...
+      this.$socket.emit(MESSAGE.LEAVE_ROOM);
       this.$router.replace('/');
-      this.$socket.emit(MESSAGE.RESET_GAME);
-    },
-    findPlayerById(player_id) {
-        return this.$store.getters.players.find(u => u.id == player_id);
     }
-  },
-  computed: {
-      current_player_name: function() {
-          let current_player = this.findPlayerById(this.$store.getters.current_player_id);
-          return current_player.name;
-      }
   }
 }
 </script>

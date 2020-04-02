@@ -1,13 +1,12 @@
 <template>
     <div class="cards-container">
-        <p class="player-name" v-bind:class="{'is-playing':player.id == current_player_id}">{{player.name}}</p>
+        <p class="player-name" v-bind:class="{'is-playing':user.name == whoseTurn}">{{user.name}}</p>
         <div class="cards-in-row">
-            <div class="card" v-for="(card_id, index) in player.cards" :key="index">
+            <div class="card" v-for="(card_id, index) in user.cards" :key="index">
                 <img class="card-preview"
                     :src="getImgUrl(cards[card_id])"
-                    v-bind:class="[{'is-playing':showCard(player, cards[card_id], current_player_id)},
-                                {'blink-card':blinkCard(card_id)}]"
-                    @click="clickOnCard(player, cards[card_id], current_player_id)"
+                    v-bind:class="{'blink-card':blinkCard(card_id)}"
+                    @click="clickOnCard(user, cards[card_id])"
                 />
             </div>
         </div>
@@ -15,37 +14,34 @@
 </template>
 
 <script>
-import MESSAGE from '../common/messages';
+import MESSAGE from '../common/message';
+import CARD_TYPE from '../common/card-type'
 export default {
     name: "PlayerCards",
-    props: ["player"],
+    props: ["user"],
     methods: {
-        findPlayerById(player_id) {
-            return this.$store.getters.players.find(u => u.id == player_id);
-        },
         getImgUrl(card) {
             var images = require.context('../../assets/cards/original/compressed');
             if(!card.visible) {
                 return images('./' + 'back.png');
             }
-            else if(card.type == 0) {
+            else if(card.type == CARD_TYPE.NEUTRAL) {
                 return images('./' + 'neutral.png');
             }
-            else if(card.type == 1) {
+            else if(card.type == CARD_TYPE.DEFUSE) {
                 return images('./' + 'defuse.png');
             }
             else {
                 return images('./' + 'bomb.png');
             }
         },
-        clickOnCard(player, card, current_player_id) {
+        clickOnCard(user, card) {
             // prevent current user from doing anything if it is not is turn
-            let current_player = this.findPlayerById(current_player_id);
-            if(this.$store.getters.my_username !== current_player.name) {
+            if(this.$store.getters.username !== this.$store.getters.gameState.whoseTurn) {
                 console.log('Cannot uncover card while it is not your turn!');
                 return;
             }
-            if(player.id == current_player_id) {
+            if(user.name === this.$store.getters.username) {
                 console.log('Cannot uncover your own cards!');
                 return; // prevent current user from selecting one of his own cards
             }
@@ -54,27 +50,27 @@ export default {
                 return; // prevent user from selecting an already discovered card
             }
             card.visible = true;
-            this.$socket.emit(MESSAGE.SELECT_CARD, {player: player, card: card});
-        },
-        showCard(player, card, current_player_id) {
-            return (!card.visible && player.id == current_player_id);
+            this.$socket.emit(MESSAGE.SELECT_CARD, {card_id: card.id});
         },
         blinkCard(card_id) {
-            return card_id === this.$store.getters.last_card_played_id;
+            return card_id === this.$store.getters.gameState.lastCardPlayedId;
         }
     },
     computed: {
-        my_username: function() {
-            return this.$store.getters.my_username;
+        username: function() {
+            return this.$store.getters.username;
         },
-        current_player_id: function() {
-            return this.$store.getters.current_player_id;
+        whoseTurn: function() {
+            return this.$store.getters.gameState.whoseTurn;
         },
-        players: function() {
-            return this.$store.getters.players;
+        currentPlayerId: function() {
+            return this.$store.getters.gameState.currentPlayerId;
+        },
+        users: function() {
+            return this.$store.getters.gameState.users;
         },
         cards: function() {
-            return this.$store.getters.cards;
+            return this.$store.getters.gameState.cards;
         }
     }
 }

@@ -1,52 +1,102 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import GAME_PHASE from '../common/game-phase'
+import CONNECTION_STATE from '../common/connection-state'
+import { generateClientGameState } from '../common/cli-game'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    connected_users: [],
-    cards: [],
-    players: [],
-    current_player_id: 0,
-    round_number: 1,
-    num_rounds: 1,
-    my_username: "",
-    last_card_played_id: undefined,
-    game_phase: GAME_PHASE.SETUP
+    username: localStorage.username || '',
+    roomCode: undefined,
+    gameState: undefined,
+    createWarning: undefined,
+    joinWarning: undefined,
+    gameConnection: CONNECTION_STATE.DISCONNECT
   },
   mutations: {
+    setGameState(state, newGameState) {
+      if(newGameState === undefined) {
+        state.gameState = undefined;
+        this.commit('setGameConnection', CONNECTION_STATE.DISCONNECT);
+        return;
+      }
+      this.commit('setGameConnection', CONNECTION_STATE.CONNECT);
+
+      if(state.gameState === undefined) {
+        state.gameState = generateClientGameState();
+      }
+      state.gameState.adoptJson(newGameState);
+    },
+    setUsername(state, username) {
+      state.username = username;
+      localStorage.username = username;
+    },
+    setGameConnection(state, cs) {
+      state.gameConnection = cs;
+    },
+    setWarning(state, warning) {
+      state[warning.name] = warning.message;
+    },
     loginUser(state, username) {
-      state.my_username = username;
+      state.username = username;
     },
-    updateConnectedUsers(state, connected_users) {
-      state.connected_users = connected_users;
+    updateRoomCode(state, roomCode) {
+      state.roomCode = roomCode;
     },
-    SOCKET_USER_JOIN_ROOM(state, message) {
-      state.connected_users = message;
+    SOCKET_CREATE_ROOM(state, data) {
+      if(data.err) {
+        this.commit('setWarning', {name: 'createWarning', message: data.err});
+        console.warn(data.err);
+        return;
+      }
+      state.username = data.username;
+      if(data.roomState !== undefined) {
+        this.commit('setGameState', data.roomState);
+      }
     },
-    SOCKET_UPDATE_GAME_STATE(state, message) {
-      console.log("Updated game state!");
-      state.cards = message.cards;
-      state.players = message.players;
-      state.current_player_id = message.current_player_id;
-      state.round_number = message.round_number;
-      state.num_rounds = message.num_rounds;
-      state.last_card_played_id = message.last_card_played_id;
-      state.game_phase = message.game_phase;
+    SOCKET_JOIN_ROOM(state, data) {
+      if(data.err) {
+        this.commit('setWarning', {name: 'joinWarning', message: data.err});
+        console.warn(data.err);
+        return;
+      }
+      if(data.roomState !== undefined) {
+        this.commit('setGameState', data.roomState);
+      }
+    },
+    SOCKET_START_GAME(state, data) {
+      if(data.roomState !== undefined) {
+        this.commit('setGameState', data.roomState);
+      }
+    },
+    SOCKET_NEW_TURN(state, data) {
+      if(data.roomState !== undefined) {
+        this.commit('setGameState', data.roomState);
+      }
+    },
+    SOCKET_NEW_ROUND(state, data) {
+      if(data.roomState !== undefined) {
+        this.commit('setGameState', data.roomState);
+      }
+    },
+    SOCKET_END_GAME(state, data) {
+      if(data.roomState !== undefined) {
+        this.commit('setGameState', data.roomState);
+      }
+    },
+    SOCKET_USER_LEFT(state, data) {
+      if(data.roomState !== undefined) {
+        this.commit('setGameState', data.roomState);
+      }
     }
   },
   getters: {
-    connected_users: state => state.connected_users,
-    cards: state => state.cards,
-    players: state => state.players,
-    current_player_id: state => state.current_player_id,
-    round_number: state => state.round_number,
-    num_rounds: state => state.num_rounds,
-    my_username: state => state.my_username,
-    last_card_played_id: state => state.last_card_played_id,
-    game_phase: state => state.game_phase
+    username: state => state.username,
+    gameState: state => state.gameState,
+    roomCode: state => state.roomCode,
+    createWarning: state => state.createWarning,
+    joinWarning: state => state.joinWarning
   },
   actions: {
   },

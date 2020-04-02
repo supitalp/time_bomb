@@ -1,7 +1,7 @@
 <template>
     <div class="board">
-        <div v-bind:key="player.id" v-for="player in players">
-            <PlayerCards v-bind:player="player" />
+        <div v-bind:key="user.name" v-for="user in users">
+            <PlayerCards :user="user" />
         </div>
     </div>
 </template>
@@ -14,8 +14,8 @@ export default {
         PlayerCards
     },
     computed: {
-        players: function() {
-            return this.$store.getters.players;
+        users: function() {
+            return this.$store.getters.gameState.users;
         }
     }
 }

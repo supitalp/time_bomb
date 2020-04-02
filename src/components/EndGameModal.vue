@@ -19,9 +19,9 @@
           id="modalDescription"
         >
           <slot name="body">
-            <p>{{getTextDescription(reason)}}</p>
-            <p>Good guys: {{getPlayersInTeam("Good")}}</p>
-            <p>Bad guys: {{getPlayersInTeam("Bad")}}</p>
+            <p>{{getTextDescription()}}</p>
+            <p>Good guys: {{getUsersInTeamGood()}}</p>
+            <p>Bad guys: {{getUsersInTeamBad()}}</p>
           </slot>
         </section>
         <footer class="modal-footer">
@@ -44,35 +44,42 @@
 
 
 <script>
+  import GAME_END from '../common/game-end'
+  import TEAM from '../common/team'
   export default {
     name: 'EndGameModal',
-    props: ["reason"],
     methods: {
         close() {
             this.$emit('close');
         },
-        getTextDescription(reason) {
-          if(reason === 'bomb') {
+        getTextDescription() {
+          let game_end = this.$store.getters.gameState.gameEnd;
+          if(game_end === GAME_END.BOMB_EXPLODED) {
             return "The bomb exploded! The bad guys win!";
           }
-          else if(reason === 'defuse_found') {
+          else if(game_end === GAME_END.ALL_DEFUSE_FOUND) {
             return "The bomb has been defused! The good guys win!";
           }
-          else if(reason === 'rounds_expired') {
+          else if(game_end === GAME_END.TIME_EXPIRED) {
             return "Time expired! The bad guys win!";
           }
-          else if(reason === 'user_disconnected') {
-            return "Error: one user has disconnected. Unfortunately we must stop the game :("
+          else if(game_end === GAME_END.USER_DISCONNECTED) {
+            return "Error: " + this.$store.getters.gameState.username + " has disconnected. Unfortunately we must stop the game :("
           }
           else {
             return "Error: I don't know why the game ended.";
           }
         },
-        getPlayersInTeam(team) {
-          let player_names = [];
-          let players = this.$store.getters.players;
-          player_names = players.filter((player) => player.team === team).map((player) => player.name);
-          return player_names.join(', ')
+        getUsersInTeamGood() {
+          return this.getUsersInTeam(TEAM.GOOD);
+        },
+        getUsersInTeamBad() {
+          return this.getUsersInTeam(TEAM.BAD);
+        },
+        getUsersInTeam(team) {
+          let users = this.$store.getters.gameState.users;
+          let usernames = users.filter((u) => u.team === team).map((u) => u.name);
+          return usernames.join(', ')
         }
     }
   };

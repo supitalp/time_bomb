@@ -1,0 +1,11 @@
+module.exports = {
+    'JOIN_ROOM': 'JOIN_ROOM',
+    'CREATE_ROOM': 'CREATE_ROOM',
+    'START_GAME': 'START_GAME',
+    'SELECT_CARD': 'SELECT_CARD',
+    'NEW_TURN': 'NEW_TURN',
+    'NEW_ROUND': 'NEW_ROUND',
+    'END_GAME': 'END_GAME',
+    'LEAVE_ROOM': 'LEAVE_ROOM',
+    'USER_LEFT': 'USER_LEFT'
+};

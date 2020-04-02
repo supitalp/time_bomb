@@ -2,30 +2,32 @@
         <div class="player-status-main">
             <div class="player-status" @click="togglePlayerStatusPanel()" v-show="isGameStatusPanelVisible">
                 <div class="player-identity">
-                    <p>{{my_player.name}}</p>
-                    <img class="card-preview" :src="getTeamImgUrl(my_player.team)" />
+                    <p>{{my_user.name}}</p>
+                    <img class="card-preview" :src="getTeamImgUrl(my_user.team)" />
                 </div>
                 <div class="player-cards-row">
                     <p>My cards</p>
                     <div class="my-cards">
                         <!-- https://stackoverflow.com/a/52658488 -->
-                        <div class="card" v-for="i in numCardsOfType(my_player, cards, 0)" :key="'neutral' + i" :src="getImgUrl(0)" >
-                            <img class="card-preview" :src="getImgUrl(0)" />
+                        <div class="card" v-for="i in numNeutral()" :key="'neutral' + i" :src="getImgUrl(0)" >
+                            <img class="card-preview" :src="getImgNeutral()" />
                         </div>
-                        <div class="card" v-for="i in numCardsOfType(my_player, cards, 1)" :key="'defuse' + i" :src="getImgUrl(1)" >
-                            <img class="card-preview" :src="getImgUrl(1)" />
+                        <div class="card" v-for="i in numDefuse()" :key="'defuse' + i" :src="getImgUrl(1)" >
+                            <img class="card-preview" :src="getImgDefuse()" />
                         </div>
-                        <div class="card" v-for="i in numCardsOfType(my_player, cards, 2)" :key="'bomb' + i" :src="getImgUrl(2)" >
-                            <img class="card-preview" :src="getImgUrl(2)" />
+                        <div class="card" v-for="i in numBombs()" :key="'bomb' + i" :src="getImgUrl(2)" >
+                            <img class="card-preview" :src="getImgBomb()" />
                         </div>
                     </div>
                 </div>
             </div>
-            <div v-show="!isGameStatusPanelVisible" class="toggle-player-status" @click="togglePlayerStatusPanel()">My cards ({{my_player.name}})</div>
+            <div v-show="!isGameStatusPanelVisible" class="toggle-player-status" @click="togglePlayerStatusPanel()">My cards ({{my_user.name}})</div>
         </div>
 </template>
 
 <script>
+import CARD_TYPE from '../common/card-type';
+import TEAM from '../common/team';
 export default {
     name: "PlayerStatus",
     data () {
@@ -37,11 +39,24 @@ export default {
         togglePlayerStatusPanel() {
             this.isGameStatusPanelVisible = !this.isGameStatusPanelVisible;
         },
-        numCardsOfType(player, cards, type) {
-            var num = 0;
-            for(var index = 0; index < player.cards.length; ++index) {
-                if(cards[player.cards[index]].type == type
-                && !cards[player.cards[index]].visible) {
+        numNeutral() {
+            let user = this.$store.getters.gameState.findUser(this.$store.getters.username);
+            return this.numCardsOfType(user, CARD_TYPE.NEUTRAL);
+        },
+        numDefuse() {
+            let user = this.$store.getters.gameState.findUser(this.$store.getters.username);
+            return this.numCardsOfType(user, CARD_TYPE.DEFUSE);
+        },
+        numBombs() {
+            let user = this.$store.getters.gameState.findUser(this.$store.getters.username);
+            return this.numCardsOfType(user, CARD_TYPE.BOMB);
+        },
+        numCardsOfType(user, type) {
+            let num = 0;
+            let cards = this.$store.getters.gameState.cards;
+            for(let index = 0; index < user.cards.length; ++index) {
+                if(cards[user.cards[index]].type === type
+                && !cards[user.cards[index]].visible) {
                     num++;
                 }
             }
@@ -49,19 +64,28 @@ export default {
         },
         getTeamImgUrl(team) {
             var images = require.context('../../assets/cards/original/compressed');
-            if(team === "Good") {
+            if(team === TEAM.GOOD) {
                 return images('./' + 'good_guy_1.png');
             }
             else {
                 return images('./' + 'bad_guy_1.png');
             }
         },
+        getImgNeutral() {
+            return this.getImgUrl(CARD_TYPE.NEUTRAL);
+        },
+        getImgDefuse() {
+            return this.getImgUrl(CARD_TYPE.DEFUSE);
+        },
+        getImgBomb() {
+            return this.getImgUrl(CARD_TYPE.BOMB);
+        },
         getImgUrl(type) {
             var images = require.context('../../assets/cards/original/compressed');
-            if(type == 0) {
+            if(type === CARD_TYPE.NEUTRAL) {
                 return images('./' + 'neutral.png');
             }
-            else if(type == 1) {
+            else if(type === CARD_TYPE.DEFUSE) {
                 return images('./' + 'defuse.png');
             }
             else {
@@ -70,17 +94,17 @@ export default {
         },
     },
     computed: {
-        my_username: function() {
-            return this.$store.getters.my_username;
+        username: function() {
+            return this.$store.getters.username;
         },
-        my_player: function() {
-            return this.$store.getters.players.find(o => o.name === this.$store.getters.my_username);
+        my_user: function() {
+            return this.$store.getters.gameState.users.find(u => u.name === this.$store.getters.username);
         },
-        players: function() {
-            return this.$store.getters.players;
+        users: function() {
+            return this.$store.getters.gameState.users;
         },
         cards: function() {
-            return this.$store.getters.cards;
+            return this.$store.getters.gameState.cards;
         }
     }
 }

@@ -1,18 +1,22 @@
 <template>
   <div class="lobby">
     <h1>Lobby</h1>
-    <form @submit.prevent="startGame">
+    <form @submit.prevent="startGame" v-show="isUserHost()">
     <input type="submit" value="Start Game" class="btn" :disabled="!Boolean(canStartGame())">
     </form>
+    <div class="stripe flex-center align-center game-code">
+      <div class="stripe-content">
+        <div id="setup-header">Your game code is:</div>
+        <h1>{{ roomCode }}</h1>
+      </div>
+    </div>
     <h3>Players</h3>
-    <p v-for="user in this.$store.getters.connected_users" :key="user.id">
-        {{user.username}}
-    </p>
+    <p v-for="username in usernames" :key="'0' + username">{{username}}</p>
   </div>
 </template>
 
 <script>
-import MESSAGE from '../common/messages'
+import MESSAGE from '../common/message'
 export default {
   name: "Lobby",
   sockets: {
@@ -21,15 +25,27 @@ export default {
     }
   },
   methods: {
+    isUserHost() {
+      return this.$store.getters.username === this.$store.getters.gameState.hostName;
+    },
     startGame() {
-      this.$socket.emit(MESSAGE.START_GAME);
+      this.$socket.emit(MESSAGE.START_GAME, {});
     },
     canStartGame() {
-      var num_players = this.$store.getters.connected_users.length;
-      // return num_players >= 4 && num_players <= 8;
-        return num_players >= 2 && num_players <= 8;
+        return this.numUsers >= 2 && this.numUsers <= 8;
     }
-  }
+  },
+  computed: {
+		usernames: function() {
+			return this.$store.getters.gameState && this.$store.getters.gameState.getUsernames();
+    },
+    numUsers: function() {
+      return this.$store.getters.gameState && this.$store.getters.gameState.users.length;
+    },
+    roomCode: function() {
+      return this.$store.getters.gameState && this.$store.getters.gameState.roomCode;
+    }
+	},
 }
 </script>
 
