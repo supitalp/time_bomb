@@ -1,21 +1,31 @@
 <template>
-  <div class="create-game">
-    <div class="warning" v-show="this.$store.getters.createWarning !== undefined">
-        <p>{{this.$store.getters.createWarning}}</p>
+  <div class="setup">
+    <Header />
+    <div class="create-game">
+      <div class="warning" v-show="this.$store.getters.createWarning !== undefined">
+          <p>{{this.$store.getters.createWarning}}</p>
+      </div>
+      <form @submit.prevent="createGame">
+      <input type="text" v-model="username" name="username" placeholder="My username" required autocomplete="off">
+      <div style="clear: both"></div>
+      <input type="submit" value="Create Game" class="btn" :disabled="!this.$store.getters.username">
+      </form>
     </div>
-    <form @submit.prevent="createGame">
-    <input type="text" v-model="username" name="username" placeholder="My username" required autocomplete="off">
-    <div style="clear: both"></div>
-    <input type="submit" value="Create Game" class="btn" :disabled="!this.$store.getters.username">
-    </form>
+    <Footer />
   </div>
 </template>
 
 <script>
 import MESSAGE from '../common/message'
 import { validateUsername } from '../common/utils'
+import Header from '../components/layout/Header.vue';
+import Footer from '../components/layout/Footer.vue';
 export default {
   name: "CreateGame",
+  components: {
+    Header,
+    Footer
+  },
   data() {
     return {
       'username': ""
@@ -51,29 +61,4 @@ export default {
 </script>
 
 <style scoped>
-    .create-game {
-        padding-top: 100px;
-    }
-
-    input[type="text"] {
-        background: #eeeeee;
-        padding: 10px;
-        border: 0px;
-        border-bottom: 1px solid #ff5454;
-        text-align: center;
-        font-size: 2.4vmin;
-    }
-
-    input[type="submit"] {
-        padding: 7px;
-        margin: 15px;
-        border: 0px;
-        background: #ff5454;
-        color: #ffffff;
-        font-size: 2.4vmin;
-    }
-
-    input[type="submit"]:disabled {
-        background: #aaaaaa;
-    }
 </style>

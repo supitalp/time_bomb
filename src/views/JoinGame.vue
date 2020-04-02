@@ -1,23 +1,33 @@
 <template>
-  <div class="join-game">
-    <div class="warning" v-show="this.$store.getters.joinWarning !== undefined">
-        <p>{{this.$store.getters.joinWarning}}</p>
+  <div class="setup">
+    <Header />
+    <div class="join-game">
+      <div class="warning" v-show="this.$store.getters.joinWarning !== undefined">
+          <p>{{this.$store.getters.joinWarning}}</p>
+      </div>
+      <form @submit.prevent="joinGame">
+      <input type="text" v-model="username" name="username" placeholder="My username" required autocomplete="off">
+      <div style="clear: both"></div>
+      <input type="text" v-model="roomCode" name="roomCode" placeholder="Room Code" required autocomplete="off">
+      <br />
+      <input type="submit" value="Join Game" class="btn" :disabled="canJoinGame()">
+      </form>
     </div>
-    <form @submit.prevent="joinGame">
-    <input type="text" v-model="username" name="username" placeholder="My username" required autocomplete="off">
-    <div style="clear: both"></div>
-    <input type="text" v-model="roomCode" name="roomCode" placeholder="Room Code" required autocomplete="off">
-    <br />
-    <input type="submit" value="Join Game" class="btn" :disabled="canJoinGame()">
-    </form>
+    <Footer />
   </div>
 </template>
 
 <script>
 import MESSAGE from '../common/message'
 import { validateUsername } from '../common/utils'
+import Header from '../components/layout/Header.vue';
+import Footer from '../components/layout/Footer.vue';
 export default {
   name: "JoinGame",
+  components: {
+    Header,
+    Footer
+  },
   data() {
     return {
       'username': "",
@@ -64,30 +74,4 @@ export default {
 </script>
 
 <style scoped>
-    .join-game {
-        padding-top: 100px;
-    }
-
-    input[type="text"] {
-        background: #eeeeee;
-        padding: 10px;
-        margin: 7px;
-        border: 0px;
-        border-bottom: 1px solid #ff5454;
-        text-align: center;
-        font-size: 2.4vmin;
-    }
-
-    input[type="submit"] {
-        padding: 7px;
-        margin: 7px;
-        border: 0px;
-        background: #ff5454;
-        color: #ffffff;
-        font-size: 2.4vmin;
-    }
-
-    input[type="submit"]:disabled {
-        background: #aaaaaa;
-    }
 </style>

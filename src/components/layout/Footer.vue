@@ -1,0 +1,32 @@
+<template>
+    <footer class="footer">
+        <p>
+            TimeBomb Online is based on Iello's tabletop game, TimeBomb.
+            <br />
+            Part of the code was borrowed from the <a href="https://kc-fakeartistonline.herokuapp.com/">Fake Artist Online</a>.
+            <br />
+            <br />
+            <a href="https://github.com/supitalp/time_bomb">Github</a>
+        </p>
+    </footer>
+</template>
+
+<script>
+export default {
+    name: "Header"
+}
+</script>
+
+<style scoped>
+    .footer {
+        padding-top: 25px;
+    }
+
+    p {
+        font-size: 2vw;
+    }
+
+    a {
+        color: rgb(255, 58, 58);
+    }
+</style>

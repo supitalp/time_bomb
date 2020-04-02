@@ -1,6 +1,6 @@
 <template>
     <header class="header">
-        <h1>Time Bomb!</h1>
+        <h1>TimeBomb Online</h1>
     </header>
 </template>
 
@@ -12,9 +12,14 @@ export default {
 
 <style scoped>
     .header {
-        background: #333;
-        color: #fff;
+        padding-top: 100px;
+        color: black;
         text-align: center;
-        padding: 1px;
+        margin-bottom: 25px;
+    }
+
+    h1 {
+        font-size: 5vw;
+        display: inline;
     }
 </style>

@@ -1,17 +1,18 @@
 <template>
-  <div class="lobby">
-    <h1>Lobby</h1>
-    <form @submit.prevent="startGame" v-show="isUserHost()">
-    <input type="submit" value="Start Game" class="btn" :disabled="!Boolean(canStartGame())">
-    </form>
-    <div class="stripe flex-center align-center game-code">
-      <div class="stripe-content">
-        <div id="setup-header">Your game code is:</div>
-        <h1>{{ roomCode }}</h1>
-      </div>
+  <div class="setup">
+    <div class="game-code">
+      <p>Your game code is:</p>
+      <h1>{{ roomCode }}</h1>
     </div>
-    <h3>Players</h3>
-    <p v-for="username in usernames" :key="'0' + username">{{username}}</p>
+    <div class="players">
+      <p>Players:</p>
+      <ul class="userlist" >
+        <li v-for="username in usernames" :key="'0' + username">{{username}}</li>
+      </ul>
+    </div>
+    <form class="start-game" @submit.prevent="startGame">
+      <input type="submit" value="Start Game" class="btn" :disabled="!Boolean(canStartGame())">
+    </form>
   </div>
 </template>
 
@@ -25,9 +26,6 @@ export default {
     }
   },
   methods: {
-    isUserHost() {
-      return this.$store.getters.username === this.$store.getters.gameState.hostName;
-    },
     startGame() {
       this.$socket.emit(MESSAGE.START_GAME, {});
     },
@@ -50,16 +48,51 @@ export default {
 </script>
 
 <style scoped>
-    input[type="submit"] {
-        padding: 15px;
-        margin: 15px;
-        border: 0px;
-        background: #ff5454;
-        color: #ffffff;
-        font-size: 2vmin;
-    }
 
-    input[type="submit"]:disabled {
-      background: #aaaaaa;
-    }
+  .setup {
+    padding-top: 200px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .game-code {
+    flex: 1;
+    margin-bottom: 50px;
+  }
+
+  .players {
+    flex: 1;
+  }
+
+  .start-game {
+    flex: 1;
+  }
+
+  .userlist{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: calc((25px) * 10);
+  }
+
+  ul {
+    list-style-type: none;
+    padding: 0px;
+  }
+
+  h1 {
+    display: inline;
+  }
+
+  li {
+    font-size: 2vw;
+    font-weight: bold;
+    padding: 2px;
+  }
+
+  p {
+    flex: 1;
+    margin: 0.15vw;
+  }
+
 </style>
