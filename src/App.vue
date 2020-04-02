@@ -32,7 +32,7 @@ export default {
     border: 0px;
     background: #ff5454;
     color: #ffffff;
-    font-size: 2.4vmin;
+    font-size: 2.4vw;
     border-radius: 8px;
     cursor: pointer;
 }
@@ -48,7 +48,7 @@ input[type="text"] {
     border: 0px;
     border-bottom: 1px solid #ff5454;
     text-align: center;
-    font-size: 2.4vmin;
+    font-size: 2.4vw;
 }
 
 input[type="submit"] {
@@ -57,7 +57,7 @@ input[type="submit"] {
     border: 0px;
     background: #ff5454;
     color: #ffffff;
-    font-size: 2.4vmin;
+    font-size: 2.4vw;
 }
 
 input[type="submit"]:disabled {

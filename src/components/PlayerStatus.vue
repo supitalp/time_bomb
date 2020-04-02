@@ -148,7 +148,7 @@ export default {
 
     .card-preview {
         width: 90%;
-        max-width: 10vmin;
+        max-width: 10vw;
     }
 
     p {

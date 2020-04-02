@@ -23,12 +23,12 @@ export default {
 
 <style scoped>
     div {
-        padding-bottom: 0.4vmax;
-        padding-top: 0.4vmax;
+        padding-bottom: 0.4vh;
+        padding-top: 0.4vh;
     }
 
     .board {
-        padding-bottom: 2.5vmax;
+        padding-bottom: 2.5vh;
     }
 
 </style>
