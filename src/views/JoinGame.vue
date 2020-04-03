@@ -34,6 +34,14 @@ export default {
       'roomCode': ""
     }
   },
+  sockets: {
+    JOIN_ROOM: function(data) {
+      if(!data.err) {
+        // do not move to lobby if there was an error when joining (i.e. when room is unavailable)
+        this.$router.replace('/lobby');
+      }
+    }
+  },
   methods: {
     submitJoinGame(roomCode, username) {
       const usernameWarning = 'Username must be 1-20 characters long, and can only contain alphanumerics and spaces';
@@ -51,12 +59,7 @@ export default {
       }
     },
     joinGame() {
-      if(this.submitJoinGame(this.$store.getters.roomCode, this.$store.getters.username)) {
-        this.$router.replace('/lobby');
-      }
-      // console.log(this.$store.getters.username + ' joined game!');
-      // this.$socket.emit(MESSAGE.JOIN_ROOM, this.$store.getters.username);
-      // this.$router.replace('/lobby');
+      this.submitJoinGame(this.$store.getters.roomCode, this.$store.getters.username);
     },
     canJoinGame() {
       return !this.$store.getters.username || !this.$store.getters.roomCode;

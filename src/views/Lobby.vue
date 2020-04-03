@@ -43,7 +43,7 @@ export default {
     roomCode: function() {
       return this.$store.getters.gameState && this.$store.getters.gameState.roomCode;
     }
-	},
+  }
 }
 </script>
 

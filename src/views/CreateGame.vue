@@ -31,6 +31,14 @@ export default {
       'username': ""
     }
   },
+  sockets: {
+    CREATE_ROOM: function(data) {
+      if(!data.err) {
+        // do not move to lobby if there was an error when creating room
+        this.$router.replace('/lobby');
+      }
+    }
+  },
   methods: {
       submitCreateGame(username) {
         const usernameWarning = 'Username must be 1-20 characters long, and can only contain alphanumerics and spaces';
@@ -47,9 +55,7 @@ export default {
         }
       },
       createGame() {
-        if(this.submitCreateGame(this.$store.getters.username)) {
-          this.$router.replace('/lobby');
-        }
+        this.submitCreateGame(this.$store.getters.username);
       }
   },
   watch: {

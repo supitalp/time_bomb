@@ -64,4 +64,8 @@ input[type="submit"]:disabled {
     background: #aaaaaa;
 }
 
+.warning {
+  color: rgb(206, 11, 11);
+}
+
 </style>
