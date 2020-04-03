@@ -5,7 +5,9 @@
             <div class="card" v-for="(card_id, index) in user.cards" :key="index">
                 <img class="card-preview"
                     :src="getImgUrl(cards[card_id])"
-                    v-bind:class="{'blink-card':blinkCard(card_id)}"
+                    v-bind:class="{'blink-card':blinkCard(card_id),
+                                   'clickable-card':canClickOnCard(user, cards[card_id]),
+                                   'unclickable-card':!canClickOnCard(user, cards[card_id])}"
                     @click="clickOnCard(user, cards[card_id])"
                 />
             </div>
@@ -36,24 +38,29 @@ export default {
             }
         },
         clickOnCard(user, card) {
-            // prevent current user from doing anything if it is not is turn
-            if(this.$store.getters.username !== this.$store.getters.gameState.whoseTurn) {
-                console.log('Cannot uncover card while it is not your turn!');
+            if(!this.canClickOnCard(user, card)) {
                 return;
-            }
-            if(user.name === this.$store.getters.username) {
-                console.log('Cannot uncover your own cards!');
-                return; // prevent current user from selecting one of his own cards
-            }
-            if(card.visible) {
-                console.log('Cannot uncover a card that has been uncovered already.')
-                return; // prevent user from selecting an already discovered card
             }
             card.visible = true;
             this.$socket.emit(MESSAGE.SELECT_CARD, {card_id: card.id});
         },
         blinkCard(card_id) {
             return card_id === this.$store.getters.gameState.lastCardPlayedId;
+        },
+        canClickOnCard(user, card) {
+            if(this.$store.getters.username !== this.$store.getters.gameState.whoseTurn) {
+                console.warn('Cannot uncover card while it is not your turn!');
+                return false;
+            }
+            if(user.name === this.$store.getters.username) {
+                console.warn('Cannot uncover your own cards!');
+                return false;
+            }
+            if(card.visible) {
+                console.warn('Cannot uncover a card that has been uncovered already.')
+                return false;
+            }
+            return true;
         }
     },
     computed: {
@@ -106,6 +113,18 @@ export default {
         max-width: 90px;
         box-shadow: 2px 2px 2px grey;
         border-radius: 6%;
+    }
+
+    .clickable-card {
+        cursor: pointer;
+    }
+
+    .unclickable-card {
+        cursor: not-allowed;
+    }
+
+    .clickable-card:hover {
+        box-shadow: 0px 0px 20px green;
     }
 
     .blink-card {
