@@ -103,7 +103,7 @@ class GameRoom {
             rolesArray = [TEAM.GOOD, TEAM.BAD];
         }
         else if(numUsers == 3) {
-            // TODO: 2 users normally not allowed
+            // TODO: 3 users normally not allowed
             rolesArray = [TEAM.GOOD, TEAM.GOOD, TEAM.BAD];
         }
         if (numUsers == 4 || numUsers == 5) {
@@ -191,14 +191,14 @@ class GameRoom {
         }
     }
     nextTurn() {
-        /* do the book keeping to make the next turn happen
-         * also check if the game is finished or not
-         *return the game status: "running", "end_round", "end_game"
+        /* Do the book keeping to make the next turn happen
+         * also check if the game is finished or not.
+         * Return the game status.
         */
         let numUsers = this.users.length;
         this.numTurnsInCurrentRound++;
         if(this.numTurnsInCurrentRound >= numUsers) {  // one round finished
-            // prepare next round: it should start from the user next to
+            // Prepare next round: it should start from the user next to
             // the user that started the previous round
             this.numTurnsInCurrentRound = 0;
             this.userIdStartedCurrentRound = (this.userIdStartedCurrentRound + 1) % numUsers;
@@ -210,7 +210,7 @@ class GameRoom {
                 return MESSAGE.END_GAME;
             }
 
-            // re-deal cards to all users
+            // Re-deal cards to all users
             this.dealCards();
 
             return MESSAGE.NEW_ROUND;
@@ -246,9 +246,9 @@ const ClientAdapter = {
 			phase: gameRoom.phase,
             cards: gameRoom.cards,
             currentUserId: gameRoom.currentUserId,
-            lastCardPlayedId: gameRoom.lastCardPlayedId ? gameRoom.lastCardPlayedId : null,
+            lastCardPlayedId: gameRoom.lastCardPlayedId ? gameRoom.lastCardPlayedId : null, // null, so the empty value still gets passed to the client
             numDefuseFound: gameRoom.numDefuseFound(),
-            whoseTurn: gameRoom.whoseTurn() ? gameRoom.whoseTurn().name : null, // null, so the empty value still gets passed to the client
+            whoseTurn: gameRoom.whoseTurn() ? gameRoom.whoseTurn().name : null, // same as above
             gameEnd: gameRoom.gameEnd
 		};
 		return res;

@@ -7,7 +7,7 @@ const handleSockets = require('./socket-handler.js').handleSockets;
 const port = process.env.PORT || 3000;
 
 function startServer() {
-	return new Promise(function(resolve, reject) {
+	return new Promise(function(resolve) {
 		handleSockets(io); // socket.io app logic
 
 		if(process.env.NODE_END !== "development") {

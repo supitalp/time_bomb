@@ -1,5 +1,4 @@
 const User = require('../common/user.js').User;
-const Card = require('../common/card.js').Card;
 const ClientAdapter = require('./game-room.js').ClientAdapter;
 const Lobby = require('./lobby.js');
 const GAME_PHASE = require('../common/game-phase.js');
@@ -70,7 +69,7 @@ const MessageHandlers = {
 		broadcastRoomState(io, roomToJoin, MESSAGE.JOIN_ROOM);
 	},
 
-	[MESSAGE.LEAVE_ROOM](io, sock, data) {
+	[MESSAGE.LEAVE_ROOM](io, sock) {
         GamePrecond.sockHasUser(sock);
 		GamePrecond.userIsInARoom(sock.user);
 		let user = sock.user;
@@ -84,7 +83,7 @@ const MessageHandlers = {
 		});
 	},
 
-	[MESSAGE.START_GAME](io, sock, data) {
+	[MESSAGE.START_GAME](io, sock) {
 		GamePrecond.sockHasUser(sock);
 		GamePrecond.userIsInARoom(sock.user);
 		let rm = sock.user.gameRoom;
@@ -103,11 +102,11 @@ const MessageHandlers = {
             broadcastRoomState(io, rm, MESSAGE.END_GAME);
             return;
         }
-		message = rm.nextTurn();
+		let message = rm.nextTurn();
 		broadcastRoomState(io, rm, message);
 	},
 
-	disconnect(io, sock, data) {
+	disconnect(io, sock) {
 		let user = sock.user;
 		if(user) {
 			let room = user.gameRoom;

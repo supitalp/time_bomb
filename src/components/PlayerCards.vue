@@ -48,15 +48,15 @@ export default {
         },
         canClickOnCard(user, card) {
             if(this.$store.getters.username !== this.$store.getters.gameState.whoseTurn) {
-                // console.warn('Cannot uncover card while it is not your turn!');
+                // Cannot uncover card while it is not your turn
                 return false;
             }
             else if(user.name === this.$store.getters.username) {
-                // console.warn('Cannot uncover your own cards!');
+                // Cannot uncover your own cards
                 return false;
             }
             else if(card.visible) {
-                // console.warn('Cannot uncover a card that has been uncovered already.')
+                // Cannot uncover a card that has been uncovered already
                 return false;
             }
             else {
@@ -149,8 +149,6 @@ export default {
 
     .is-playing {
         font-weight: bold;
-        /* -webkit-filter: grayscale(100%); */
-        /* filter: grayscale(100%); */
     }
 
 </style>
