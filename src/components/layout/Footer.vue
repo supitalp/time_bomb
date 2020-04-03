@@ -1,10 +1,11 @@
 <template>
     <footer class="footer">
         <p>
-            TimeBomb Online is based on Iello's tabletop game, TimeBomb.
+            TimeBomb Online is based on Iello's tabletop game,
             <br />
-            Part of the code was borrowed from the <a href="https://kc-fakeartistonline.herokuapp.com/">Fake Artist Online</a>.
+            <a href="https://www.iello.fr/fr/fiche/time-bomb">TimeBomb</a>.
             <br />
+            <!-- Part of the code was borrowed from the <a href="https://kc-fakeartistonline.herokuapp.com/">Fake Artist Online</a>. -->
             <br />
             <a href="https://github.com/supitalp/time_bomb">Github</a>
         </p>

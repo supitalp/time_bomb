@@ -1,6 +1,6 @@
 # TimeBomb Online
 
-An online multiplayer game based on Iello's tabletop game, *TimeBomb*.
+An online multiplayer game based on Iello's tabletop game, [TimeBomb](https://www.iello.fr/fr/fiche/time-bomb).
 Play with up to 8 friends, on your computer or your phone.
 
 Play on Heroku: [http://time-bomb-online.herokuapp.com](http://time-bomb-online.herokuapp.com)
