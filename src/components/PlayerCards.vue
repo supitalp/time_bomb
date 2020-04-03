@@ -49,15 +49,15 @@ export default {
         },
         canClickOnCard(user, card) {
             if(this.$store.getters.username !== this.$store.getters.gameState.whoseTurn) {
-                console.warn('Cannot uncover card while it is not your turn!');
+                // console.warn('Cannot uncover card while it is not your turn!');
                 return false;
             }
             if(user.name === this.$store.getters.username) {
-                console.warn('Cannot uncover your own cards!');
+                // console.warn('Cannot uncover your own cards!');
                 return false;
             }
             if(card.visible) {
-                console.warn('Cannot uncover a card that has been uncovered already.')
+                // console.warn('Cannot uncover a card that has been uncovered already.')
                 return false;
             }
             return true;

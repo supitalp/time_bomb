@@ -29,7 +29,7 @@
 
             <button
               type="button"
-              class="btn-green"
+              class="btn-red"
               @click="close"
               aria-label="Close modal"
             >
@@ -115,7 +115,7 @@
 
   .modal-header {
     border-bottom: 1px solid #eeeeee;
-    color: #4AAE9B;
+    color: #ff5454;
     justify-content: space-between;
   }
 
@@ -135,14 +135,20 @@
     padding: 20px;
     cursor: pointer;
     font-weight: bold;
-    color: #4AAE9B;
+    color: #ff5454;
     background: transparent;
   }
 
-  .btn-green {
+  .btn-red {
+    padding: 10px;
     color: white;
-    background: #4AAE9B;
-    border: 1px solid #4AAE9B;
+    background: #ff5454;
+    border: 0px;
     border-radius: 2px;
   }
+
+  .btn-red:hover {
+    background: #f38484;
+  }
+
 </style>
