@@ -103,8 +103,15 @@ export default {
     }
 
     .card {
-        padding-left: 1%;
-        padding-right: 1%;
+        padding-left: 7px;
+        padding-right: 7px;
+    }
+
+    @media only screen and (max-width: 600px) {
+        .card {
+            padding-left: 4px;
+            padding-right: 4px;
+        }
     }
 
     .card-preview {
