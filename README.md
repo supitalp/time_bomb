@@ -17,7 +17,7 @@ While I'm not looking for contributors, feel free to make a pull request and I'l
 
 ## Acknowledgments
 
-This project heavily on the following third-party libraries:
+This project heavily relies on the following third-party libraries:
 - [Vue.js](https://vuejs.org/)
 - [Vuex](https://vuex.vuejs.org/)
 - [Vue-Socket.io](https://www.npmjs.com/package/vue-socket.io)
