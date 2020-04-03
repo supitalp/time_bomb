@@ -67,7 +67,7 @@ export default {
   },
   watch: {
     'username'(val) {
-      this.$store.commit('loginUser', val);
+      this.$store.commit('setUsername', val);
     },
     'roomCode'(val) {
       this.$store.commit('updateRoomCode', val);

@@ -38,9 +38,6 @@ export default new Vuex.Store({
     setWarning(state, warning) {
       state[warning.name] = warning.message;
     },
-    loginUser(state, username) {
-      state.username = username;
-    },
     updateRoomCode(state, roomCode) {
       state.roomCode = roomCode;
     },
