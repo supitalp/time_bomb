@@ -20,9 +20,6 @@ export default {
   color: black;
 }
 
-.setup {
-}
-
 p,div {
   font-size: 17px;
 }

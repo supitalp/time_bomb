@@ -57,7 +57,7 @@ export default {
 
   .game-code {
     flex: 1;
-    margin-bottom: 50px;
+    margin-bottom: 40px;
   }
 
   .players {
@@ -72,7 +72,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: calc((20px) * 10);
+    height: calc((20px) * 12);
   }
 
   ul {
@@ -87,7 +87,7 @@ export default {
   }
 
   li {
-    font-size: 18px;
+    font-size: 17px;
     font-weight: bold;
     padding: 2px;
   }
@@ -96,6 +96,15 @@ export default {
     flex: 1;
     margin: 5px;
     font-size: 18px;
+  }
+
+  @media only screen and (max-width: 600px) {
+      .setup {
+        padding-top: 75px;
+      }
+      .userlist {
+        height: calc((16px) * 12);
+      }
   }
 
 </style>
