@@ -246,7 +246,7 @@ const ClientAdapter = {
 			phase: gameRoom.phase,
             cards: gameRoom.cards,
             currentUserId: gameRoom.currentUserId,
-            lastCardPlayedId: gameRoom.lastCardPlayedId,
+            lastCardPlayedId: gameRoom.lastCardPlayedId ? gameRoom.lastCardPlayedId : null,
             numDefuseFound: gameRoom.numDefuseFound(),
             whoseTurn: gameRoom.whoseTurn() ? gameRoom.whoseTurn().name : null, // null, so the empty value still gets passed to the client
             gameEnd: gameRoom.gameEnd
