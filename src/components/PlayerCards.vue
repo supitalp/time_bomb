@@ -99,7 +99,6 @@ export default {
     .cards-in-row {
         flex: 2;
         display: flex;
-        /* justify-content: center; */
     }
 
     .card {
