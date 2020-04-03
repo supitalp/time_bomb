@@ -50,7 +50,7 @@ export default {
 <style scoped>
 
   .setup {
-    padding-top: 200px;
+    padding-top: 100px;
     display: flex;
     flex-direction: column;
   }
@@ -72,7 +72,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: calc((25px) * 10);
+    height: calc((20px) * 10);
   }
 
   ul {
@@ -82,17 +82,20 @@ export default {
 
   h1 {
     display: inline;
+    font-size: 42px;
+    font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif
   }
 
   li {
-    font-size: 2vw;
+    font-size: 18px;
     font-weight: bold;
     padding: 2px;
   }
 
   p {
     flex: 1;
-    margin: 0.15vw;
+    margin: 5px;
+    font-size: 18px;
   }
 
 </style>

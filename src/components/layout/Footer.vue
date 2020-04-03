@@ -19,11 +19,19 @@ export default {
 
 <style scoped>
     .footer {
+        width: 90%;
+        margin: auto;
         padding-top: 25px;
     }
 
     p {
-        font-size: 2vw;
+        font-size: 17px;
+    }
+
+    @media only screen and (max-width: 600px) {
+        p {
+            font-size: 13px;
+        }
     }
 
     a {

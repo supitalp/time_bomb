@@ -16,23 +16,24 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  font-size: 2.4vw;
+  font-size: 3px;
   color: black;
 }
 
 .setup {
-  width: 75%;
-  margin: auto;
+}
+
+p,div {
+  font-size: 17px;
 }
 
 .btn {
-    width: 40%;
     padding: 12px;
     margin: 15px;
     border: 0px;
     background: #ff5454;
     color: #ffffff;
-    font-size: 2.4vw;
+    font-size: 19px;
     border-radius: 8px;
     cursor: pointer;
 }
@@ -48,7 +49,7 @@ input[type="text"] {
     border: 0px;
     border-bottom: 1px solid #ff5454;
     text-align: center;
-    font-size: 2.4vw;
+    font-size: 19px;
 }
 
 input[type="submit"] {
@@ -57,7 +58,7 @@ input[type="submit"] {
     border: 0px;
     background: #ff5454;
     color: #ffffff;
-    font-size: 2.4vw;
+    font-size: 19px;
 }
 
 input[type="submit"]:disabled {
@@ -66,6 +67,21 @@ input[type="submit"]:disabled {
 
 .warning {
   color: rgb(206, 11, 11);
+}
+
+@media only screen and (max-width: 600px) {
+    p,div {
+        font-size: 14px;
+    }
+    .btn {
+      font-size: 16px;
+    }
+    input[type="text"] {
+      font-size: 14px;
+    }
+    input[type="submit"] {
+      font-size: 16px;
+    }
 }
 
 </style>

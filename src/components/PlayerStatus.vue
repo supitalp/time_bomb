@@ -125,6 +125,7 @@ export default {
     .player-status {
         display: flex;
         flex-direction: row;
+        cursor: pointer;
     }
 
     .player-identity {
@@ -148,7 +149,7 @@ export default {
 
     .card-preview {
         width: 90%;
-        max-width: 10vw;
+        max-width: 100px;
     }
 
     p {
@@ -157,6 +158,7 @@ export default {
 
     .toggle-player-status {
         padding: 3px;
+        cursor: pointer;
     }
 
 </style>

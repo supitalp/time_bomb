@@ -19,7 +19,14 @@ export default {
     }
 
     h1 {
-        font-size: 5vw;
+        font-size: 45px;
         display: inline;
     }
+
+    @media only screen and (max-width: 600px) {
+        h1 {
+            font-size: 32px;
+        }
+    }
+
 </style>

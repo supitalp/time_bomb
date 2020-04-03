@@ -57,8 +57,8 @@ export default {
     },
     closeEndGameModal() {
       this.isEndGameModalVisible = false;
-      // when user closes this modal, we should reset the game
-      // and go back to the main page...
+      // when user closes this modal, we leave the room
+      // and go back to the main page
       this.$socket.emit(MESSAGE.LEAVE_ROOM);
       this.$router.replace('/');
     }
