@@ -26,6 +26,10 @@ This project heavily on the following third-party libraries:
 
 I gladly acknowledge that a large part of this code was taken and adapted from [kcgidw's](https://github.com/kcgidw) [Fake Artist Online](https://github.com/kcgidw/fao) project.
 
+## Support
+
+Like this game? You can support by buying Iello's original [TimeBomb board game](https://www.iello.fr/fr/fiche/time-bomb)!
+
 ## License
 
 GNU General Public License v3.0
