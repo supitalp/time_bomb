@@ -17,11 +17,11 @@ While I'm not looking for contributors, feel free to make a pull request and I'l
 ## Acknowledgments
 
 This project heavily on the following third-party libraries:
-    - [Vue.js](https://vuejs.org/)
-    - [Vuex](https://vuex.vuejs.org/)
-    - [Vue-Socket.io](https://www.npmjs.com/package/vue-socket.io)
-    - [Socket.io](https://socket.io/)
-    - [Express](https://expressjs.com/)
+- [Vue.js](https://vuejs.org/)
+- [Vuex](https://vuex.vuejs.org/)
+- [Vue-Socket.io](https://www.npmjs.com/package/vue-socket.io)
+- [Socket.io](https://socket.io/)
+- [Express](https://expressjs.com/)
 
 I gladly acknowledge that a large part of this code was taken and adapted from [kcgidw](https://github.com/kcgidw) [Fake Artist Online](https://github.com/kcgidw/fao) project.
 
