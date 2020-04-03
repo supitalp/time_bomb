@@ -23,7 +23,7 @@ This project heavily on the following third-party libraries:
 - [Socket.io](https://socket.io/)
 - [Express](https://expressjs.com/)
 
-I gladly acknowledge that a large part of this code was taken and adapted from [kcgidw](https://github.com/kcgidw) [Fake Artist Online](https://github.com/kcgidw/fao) project.
+I gladly acknowledge that a large part of this code was taken and adapted from [kcgidw's](https://github.com/kcgidw) [Fake Artist Online](https://github.com/kcgidw/fao) project.
 
 ## License
 
