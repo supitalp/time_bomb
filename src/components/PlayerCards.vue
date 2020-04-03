@@ -41,7 +41,6 @@ export default {
             if(!this.canClickOnCard(user, card)) {
                 return;
             }
-            card.visible = true;
             this.$socket.emit(MESSAGE.SELECT_CARD, {card_id: card.id});
         },
         blinkCard(card_id) {
@@ -52,15 +51,17 @@ export default {
                 // console.warn('Cannot uncover card while it is not your turn!');
                 return false;
             }
-            if(user.name === this.$store.getters.username) {
+            else if(user.name === this.$store.getters.username) {
                 // console.warn('Cannot uncover your own cards!');
                 return false;
             }
-            if(card.visible) {
+            else if(card.visible) {
                 // console.warn('Cannot uncover a card that has been uncovered already.')
                 return false;
             }
-            return true;
+            else {
+                return true;
+            }
         }
     },
     computed: {
