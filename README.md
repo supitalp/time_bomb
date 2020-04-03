@@ -8,6 +8,7 @@ Play on Heroku: [http://time-bomb-online.herokuapp.com](http://time-bomb-online.
 ## Develop
 
 Watch-build public: ```npm run serve```
+
 Build: ```npm run build```
 
 ## Contribute
